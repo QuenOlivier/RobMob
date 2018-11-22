@@ -4,6 +4,7 @@ import rospy
 import roslib
 import numpy
 import math
+import argparse
 from sensor_msgs.msg import Joy
 from geometry_msgs.msg import Twist, Vector3
 
@@ -54,13 +55,8 @@ def main():
 	test=TurtleTeleop()
 
 	while(1):
-		norm=math.sqrt(test._axes[1]*test._axes[1]+test._axes[0]*test._axes[0])
-		if(test._axes[1]!=0):
-			angle=numpy.arctan(test._axes[0]/test._axes[1])
-		else:
-			angle=0
 		linear=Vector3(test._axes[1],0,0)
-		angular=Vector3(0,0,angle)
+		angular=Vector3(0,0,test._axes[3])
 		msg=Twist(linear,angular)
 		test._turtle_pub.publish(msg)
 
