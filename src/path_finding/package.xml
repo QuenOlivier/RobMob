@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>RobMob</name>
+  <name>path_finding</name>
   <version>0.0.0</version>
-  <description>The RobMob package</description>
+  <description>Package for the path finding</description>
 
 
   <maintainer email="quentin.olivier1996@gmail.com">Quentin</maintainer>
