@@ -14,6 +14,6 @@
   <param name="axis_angular" value="0" type="int"/>
   <param name="scale_linear" value="2" type="double"/>
   <param name="scale_angular" value="2" type="double"/>
-  <node pkg="teleoperation" type="test.py" name="teleop">
+  <node pkg="teleoperation" type="teleop_turtle.py" name="teleop">
   </node>
 </launch>

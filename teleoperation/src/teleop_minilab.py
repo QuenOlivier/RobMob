@@ -22,7 +22,7 @@ class TurtleTeleop:
 		self._turn=0
 		rospy.Rate(1)	
 		self._joy_sub=rospy.Subscriber("joy", Joy, self.getJoy)	
-		self._turtle_pub=rospy.Publisher("turtle1/cmd_vel",Twist,queue_size=1)
+		self._turtle_pub=rospy.Publisher("/cmd_vel",Twist,queue_size=1)
 	
 	##Fetch the data.
 	#
