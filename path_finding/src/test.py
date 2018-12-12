@@ -1,16 +1,27 @@
+#!/usr/bin/env python
+
 from PIL import Image
 import numpy
 import cv2
+import rospy
+from util import map
+from geometry_msgs.msg import PoseStamped, Pose
 
-im = Image.open('a_image.tif')
-im.show()
-imarray = numpy.array(im)
+def callback(data):
+    rospy.loginfo(rospy.get_caller_id() + "I heard %s", data.data)
 
-cv2.imshow('image',imarray)
-ret,thresh = cv2.threshold(imarray,127,255,cv2.THRESH_BINARY)
-cv2.imshow('image threshold',thresh)
+def main():
+	test=map.Map()
+	rospy.Subscriber("chatter", PoseStamped, callback)
 
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    	# spin() simply keeps python from exiting until this node is stopped
+    	rospy.spin()
+	
 
-
+if __name__ == '__main__':
+    try:
+	print("\n[Initializing node...]\n")
+	rospy.init_node('Goal',anonymous=True)
+        main()
+    except rospy.ROSInterruptException:
+        pass
