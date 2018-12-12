@@ -1,7 +1,7 @@
 #On a une image binaire
 #Tirage d'une position aleatoire dans cette image
 #Verification que la position soit libre
-#Trouver le point le plus proche pnear
+#Trouver le point le plus proche pnear (listprox[0])
 #Creer un point np avec une distance dq moins grande que depuis pnear
 #Verifier que le trajet entre pnear et np est libre
 #Sinon prendre le second point le plus proche comme nouveau pnear, etc
@@ -34,10 +34,10 @@ class point:
 
 
 #Cree un nouveau point dans une case libre
-def newpoint(xmax, ymax, img):
+def randompoint(xmax, ymax, img):
 	x = randomchoice(range(xmax))
 	y = randomchoice(range(ymax))
-	while(map[x][y] != 0):
+	while(img[x][y] != 0):
 		x = randomchoice(range(xmax))
 		y = randomchoice(range(ymax))
 	return point(x, y, 0, 0)
@@ -66,15 +66,60 @@ def listeproximite(listpoints, goal):
 
 	return listres
 
-def dqpoint(listprox, goal, dq):
+def pathfree(pinit, goal, img):
+	#Puisque le deplacement sera petit, on peut verifier la totalite du rectangle dont la diagonale est la 
+	#trajectoire que l'on souhaite verifier. Ainsi si la ligne est libre mais que l'on se rapproche
+	#dangeureusement du mur, nous n'emprinterons pas ce chemin
+	free = True
+	for i in range(pinit.x, goal.x):
+		for j in range(pinit.y, goal.y):
+			if img[i][j] != 0 :
+				free = False
+	return free
+
+def dqpoint(listprox, goal, dq, img):
+	free = False
+	xnp = 0
+	ynp = 0
+	indpre = 0
+	while(free == False):
+		xnp = listprox[0].x + math.ceil((goal.x - listprox[0].x)*(dq/dist(listprox[0], goal)))
+		ynp = listprox[0].y + math.ceil((goal.y - listprox[0].y)*(dq/dist(listprox[0], goal)))
+
+		free = pathfree(listprox[0], point(xnp, ynp, 0, 0), img)
+
+		indpre = listprox[0].indice
+		del listprox[0]
 	
+	return point(xnp, ynp, 0, indpre)
 
 
-ximg = #TODO
-yimg = #TODO
+def main():
+	img = #TODO
+	ximg = #TODO
+	yimg = #TODO
 
-xrobot = #TODO
-yrobot = #TODO
+	xrobot = #TODO
+	yrobot = #TODO
 
-ListePoints = []
-ListePoints.append(point(xrobot, yrobot, len(ListePoints), None))
+	goal = point()#TODO
+
+	ListePoints = []
+	ListePoints.append(point(xrobot, yrobot, len(ListePoints), None))
+
+	while((ListePoints[-1].x != goal.x) & (ListePoints[-1].y != goal.y)):
+		randpoint = randompoint(ximg, yimg, img)
+		listprox = listeproximite(ListePoints, randpoint)
+		ListePoints.append(dqpoint(listprox, randpoint, 5, img))
+		ListePoints[-1].indice = len(ListePoints)-1
+
+		if(pathfree(ListePoints[-1], goal, img) == True):
+			ListePoints.append(goal)
+			ListePoints[-1].preced = len(ListePoints)-2
+			ListePoints[-1].indice = len(ListePoints)-1
+
+#POUR LA SUITE :
+#Definir l'image, la pos du robot et de l'objectif
+#Afficher dans l'image le chemin trouve
+#Simplifier le chemin
+#Lisser la trajectoire
