@@ -24,6 +24,7 @@
 import random
 import copy
 import math
+import cv2
 
 class point:
     def __init__(self, xp, yp, ind, pre):
@@ -50,7 +51,7 @@ def dist(pos, goal):
 	return math.sqrt((gx - px)**2 + (gy - py)**2)
 
 def listeproximite(listpoints, goal):
-	listcop = copy.deepcopy(listpoints)
+	listcop = copy.copy(listpoints)		#Si bug, essayer la deepcopy, mais copy devrait sufire
 	listres = []
 
 	while(len(listcop) > 0):
@@ -96,27 +97,46 @@ def dqpoint(listprox, goal, dq, img):
 
 def main():
 	img = #TODO
-	ximg = #TODO
-	yimg = #TODO
+
+	ximg = #TODO	#taille en x de l'image
+	yimg = #TODO	#taille en y de l'image
+
+	imgaff = copy.copy(img)		#Creation d'une image pour l'affichage
+	#Conversion des donnes de cet image en couleure RGB
+	for i in range ximg:
+		for j in range yimg:
+			if(imgaff(i, j) == 0):
+				imgaff(i,j) = (255,255,255)
+			else:
+				imgaff(i,j) = (0,0,0)
+	cv2.imshow('map',imgaff)
 
 	xrobot = #TODO
 	yrobot = #TODO
 
 	goal = point()#TODO
 
-	ListePoints = []
-	ListePoints.append(point(xrobot, yrobot, len(ListePoints), None))
+	ListePoints = []	#Liste des points du RRT
+	ListePoints.append(point(xrobot, yrobot, len(ListePoints), None))	#Ajout de la pos du Robot comme premier point
 
 	while((ListePoints[-1].x != goal.x) & (ListePoints[-1].y != goal.y)):
-		randpoint = randompoint(ximg, yimg, img)
-		listprox = listeproximite(ListePoints, randpoint)
-		ListePoints.append(dqpoint(listprox, randpoint, 5, img))
-		ListePoints[-1].indice = len(ListePoints)-1
+		cv2.imshow('map_RRT',imgaff)
+		randpoint = randompoint(ximg, yimg, img)					#Lance aleatoire du RRT
+		listprox = listeproximite(ListePoints, randpoint)			#Tri par ordre de proximite des points de l'arbre
+		ListePoints.append(dqpoint(listprox, randpoint, 5, img))	#Calcul du nouveau point de l'arbre et ajout a la liste
+		ListePoints[-1].indice = len(ListePoints)-1					#Changement de l'indice du nouveau point pour le faire correspondre a sa position
+		
+		#Trace sur l'image a afficher d'une petite ligne pour relier le nouveau point du RRT a son point parent
+		cv2.line(imgaff,(ListePoints[-1].x,ListePoints[-1].y),(ListePoints[ListePoints[-1].preced].x,ListePoints[ListePoints[-1].preced].y),(0,0,0),1)
 
+		#Test pour voir si le dernier point a une vue directe sur l'objectif, si oui, on fini le RRT
 		if(pathfree(ListePoints[-1], goal, img) == True):
-			ListePoints.append(goal)
-			ListePoints[-1].preced = len(ListePoints)-2
-			ListePoints[-1].indice = len(ListePoints)-1
+			ListePoints.append(goal)						#Ajout de l'objectif a l'arbre en position finale
+			ListePoints[-1].preced = len(ListePoints)-2		#Changement du parent de l'objectif pour le dernier point calcule
+			ListePoints[-1].indice = len(ListePoints)-1		#Changement de l'indice de l'objectif pour correspondre a la liste
+			cv2.line(imgaff,(ListePoints[-1].x,ListePoints[-1].y),(ListePoints[ListePoints[-1].preced].x,ListePoints[ListePoints[-1].preced].y),(0,0,0),1)
+
+	cv2.imshow('map_RRT',imgaff)
 
 #POUR LA SUITE :
 #Definir l'image, la pos du robot et de l'objectif
