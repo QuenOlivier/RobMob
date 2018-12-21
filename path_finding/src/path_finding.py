@@ -56,20 +56,53 @@ def dist(pos, goal):
 
 def listeproximite(listpoints, goal):
 	listcop = copy.copy(listpoints)		#Si bug, essayer la deepcopy, mais copy devrait sufire
+    listrand = []
 	listres = []
+    nb = 0;
 
-	while(len(listcop) > 0):
-		distmin = dist(listcop[0], goal)
-		ind = 0
-		for i in range(len(listcop)):
-			if dist(listcop[i], goal) < distmin :
-				distmin = dist(listcop[i], goal)
-				ind = i
+    while((len(listcop) > 0) and (nb < 20)): #On prend les 20 derniers points de la liste de points
+        listrand.append(listcop[-1])
+        del listcop[-1]
+        nb = nb + 1
 
-		listres.append(listcop[ind])
-		del listcop[ind]
+    nb = 0
 
-	return listres
+    while((len(listcop) > 0) and (nb < 30)): #Puis on prend 30 points alleatoirement dans la liste de points
+        ind = random.randint(0, len(listcop)-1)
+        listrand.append(listcop[ind])
+        del listcop[ind]
+        nb = nb + 1
+
+
+    while(len(listrand) > 0):  #On trie par ordre de proximite nos 50 points selectionnes
+        distmin = dist(listrand[0], goal)
+        ind = 0
+        for i in range(len(listrand)):
+            if dist(listrand[i], goal) < distmin :
+                distmin = dist(listrand[i], goal)
+                ind = i
+
+        listres.append(listrand[ind])
+        del listrand[ind]
+
+    return listres
+
+def listeproximite_old(listpoints, goal):
+    listcop = copy.copy(listpoints)     #Si bug, essayer la deepcopy, mais copy devrait sufire
+    listres = []
+
+    while(len(listcop) > 0):
+        distmin = dist(listcop[0], goal)
+        ind = 0
+        for i in range(len(listcop)):
+            if dist(listcop[i], goal) < distmin :
+                distmin = dist(listcop[i], goal)
+                ind = i
+
+        listres.append(listcop[ind])
+        del listcop[ind]
+
+    return listres
 
 
 def pathfree(pinit, goal, img):
@@ -198,6 +231,7 @@ def main(rob,objective):
         randpoint = randompoint(ximg, yimg, img)					#Lance aleatoire du RRT
         #cv2.circle(imgaff,(randpoint.x,randpoint.y),2,(255,0,0),-1)
         listprox = listeproximite(ListePoints, randpoint)			#Tri par ordre de proximite des points de l'arbre
+        #listprox = listeproximite_old(ListePoints, randpoint)           #Tri par ordre de proximite des points de l'arbre
 
         		#printList(listprox)
 
@@ -236,90 +270,6 @@ def main(rob,objective):
     #Fin de la partie reduction du nombre de points
 
     #return ListePoints     #Precedent return
-
-def test(rob,objective):
-    pas = 20 #la longueur des pas du RRT
-
-    #Recuperation de la map
-    kernel = np.ones((5,5),np.uint8)
-    map=cv2.imread("map.png",cv2.IMREAD_GRAYSCALE)
-    img = cv2.erode(map,kernel,iterations = 1)
-    yimg, ximg = img.shape[:2]
-    print("Dimension =",yimg,",",ximg)
-    imgaff = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
-
-    goal = point(int(objective.x),int(objective.y),0,0)
-
-    robot=point(int(rob.x),int(rob.y),0,None)
-
-    ListePoints = []	#Liste des points du RRT
-    ListePoints.append(robot)	#Ajout de la pos du Robot comme premier point
-
-	#Draw goal
-    cv2.circle(imgaff,(goal.x,goal.y),5,(0,0,255),-1)
-	#Draw robot
-    cv2.circle(imgaff,(robot.x,robot.y),5,(0,255,0),-1)
-
-    #POINT 1
-    #POINT 1
-    randpoint = point(int((robot.x+goal.x)/2),int((robot.y+goal.y)/2),0,0)
-    #cv2.circle(imgaff,(randpoint.x,randpoint.y),2,(255,0,0),-1)
-    listprox = listeproximite(ListePoints, randpoint)			#Tri par ordre de proximite des points de l'arbre
-    pointTemp=dqpoint(listprox, randpoint, pas, img)
-    print("Pos :",pointTemp.x, " ", pointTemp.y)
-    value=img[pointTemp.y,pointTemp.x]
-    if(pointTemp.preced==None or value==0):
-        print("ERREUR PAS DE SOLUTION\n")
-    else:
-        ListePoints.append(pointTemp)	#Calcul du nouveau point de l'arbre et ajout a la liste
-        ListePoints[-1].indice = len(ListePoints)-1					#Changement de l'indice du nouveau point pour le faire correspondre a sa position
-
-        #Trace sur l'image a afficher d'une petite ligne pour relier le nouveau point du RRT a son point parent
-        cv2.line(imgaff,(ListePoints[-1].x,ListePoints[-1].y),(ListePoints[ListePoints[-1].preced].x,ListePoints[ListePoints[-1].preced].y),(0,0,0),1)
-
-    #POINT 2
-    #POINT 2
-    #Test pour voir si le dernier point a une vue directe sur l'objectif, si oui, on fini le RRT
-    randpoint = point(int((robot.x+goal.x)/2),int((robot.y+goal.y)/2),0,0)
-    #cv2.circle(imgaff,(randpoint.x,randpoint.y),2,(255,0,0),-1)
-    listprox = listeproximite(ListePoints, randpoint)			#Tri par ordre de proximite des points de l'arbre
-    pointTemp=dqpoint(listprox, randpoint, pas, img)
-    print("Pos2 :",pointTemp.x, " ", pointTemp.y)
-    value=img[pointTemp.y,pointTemp.x]
-    if(pointTemp.preced==None or value==0):
-        print("ERREUR PAS DE SOLUTION\n")
-    else:
-        ListePoints.append(pointTemp)	#Calcul du nouveau point de l'arbre et ajout a la liste
-        ListePoints[-1].indice = len(ListePoints)-1					#Changement de l'indice du nouveau point pour le faire correspondre a sa position
-
-        #Trace sur l'image a afficher d'une petite ligne pour relier le nouveau point du RRT a son point parent
-        cv2.line(imgaff,(ListePoints[-1].x,ListePoints[-1].y),(ListePoints[ListePoints[-1].preced].x,ListePoints[ListePoints[-1].preced].y),(0,0,0),1)
-
-    #POINT 3
-    #POINT 3
-    #Test pour voir si le dernier point a une vue directe sur l'objectif, si oui, on fini le RRT
-    randpoint = point(int((robot.x+goal.x)/2),int((robot.y+goal.y)/2),0,0)
-    #cv2.circle(imgaff,(randpoint.x,randpoint.y),2,(255,0,0),-1)
-    listprox = listeproximite(ListePoints, randpoint)			#Tri par ordre de proximite des points de l'arbre
-    pointTemp=dqpoint(listprox, randpoint, pas, img)
-    print("Pos3 :",pointTemp.x, " ", pointTemp.y)
-    value=img[pointTemp.y,pointTemp.x]
-    if(pointTemp.preced==None or value==0):
-        print("ERREUR PAS DE SOLUTION\n")
-    else:
-        ListePoints.append(pointTemp)	#Calcul du nouveau point de l'arbre et ajout a la liste
-        ListePoints[-1].indice = len(ListePoints)-1					#Changement de l'indice du nouveau point pour le faire correspondre a sa position
-
-        #Trace sur l'image a afficher d'une petite ligne pour relier le nouveau point du RRT a son point parent
-        cv2.line(imgaff,(ListePoints[-1].x,ListePoints[-1].y),(ListePoints[ListePoints[-1].preced].x,ListePoints[ListePoints[-1].preced].y),(0,0,0),1)
-        		#Test pour voir si le dernier point a une vue directe sur l'objectif, si oui, on fini le RRT
-
-
-
-    cv2.imshow('map_RRT',imgaff)
-    cv2.waitKey(0)
-
-    return ListePoints
 
 
 if __name__ == '__main__':
