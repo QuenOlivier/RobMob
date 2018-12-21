@@ -74,18 +74,18 @@ def listeproximite(listpoints, goal):
         nb = nb + 1
 
 
-	while(len(listrand) > 0):  #On trie par ordre de proximite nos 50 points selectionnes
-		distmin = dist(listrand[0], goal)
-		ind = 0
-		for i in range(len(listrand)):
-			if dist(listrand[i], goal) < distmin :
-				distmin = dist(listrand[i], goal)
-				ind = i
+    while(len(listrand) > 0):  #On trie par ordre de proximite nos 50 points selectionnes
+        distmin = dist(listrand[0], goal)
+        ind = 0
+        for i in range(len(listrand)):
+            if dist(listrand[i], goal) < distmin :
+                distmin = dist(listrand[i], goal)
+                ind = i
 
-		listres.append(listrand[ind])
-		del listrand[ind]
+        listres.append(listrand[ind])
+        del listrand[ind]
 
-	return listres
+    return listres
 
 def listeproximite_old(listpoints, goal):
     listcop = copy.copy(listpoints)     #Si bug, essayer la deepcopy, mais copy devrait sufire
