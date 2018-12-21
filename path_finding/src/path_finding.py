@@ -230,7 +230,7 @@ def main(rob,objective):
         cv2.line(imgaff,(ListKeyPoints[i-1].x,ListKeyPoints[i-1].y),(ListKeyPoints[i].x,ListKeyPoints[i].y),(255,0,0),2)
 
     cv2.imshow('map_RRT',imgaff)
-    cv2.waitKey(5)
+    cv2.waitKey(0)
 
     return ListKeyPoints
     #Fin de la partie reduction du nombre de points
