@@ -94,8 +94,8 @@ def main():
 
 
 			print("Starting RTT algorithm")
-			#liste=path_finding.main(test._robot,test._goal)
-			path_finding.test(test._robot,test._goal)
+			liste=path_finding.main(test._robot,test._goal)
+			#path_finding.test(test._robot,test._goal)
 			print("Ended path finding\n")
 			cv2.imshow('map hector',img)
 			cv2.waitKey(0)
