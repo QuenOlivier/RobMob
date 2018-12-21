@@ -34,11 +34,6 @@ class Map:
 			self._width=data.info.width
 			self._resolution=data.info.resolution
 			self._origin=data.info.origin
-			print("Data : ")
-			print( self._width )
-			print(self._height)
-			#New test
-			print(len(data.data))
 			self._map = np.zeros((self._height,self._width),np.uint8)
 			i=self._height-1
 			j=0
