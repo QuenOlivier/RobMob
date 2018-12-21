@@ -71,6 +71,7 @@ def listeproximite(listpoints, goal):
 
 	return listres
 
+
 def pathfree(pinit, goal, img):
 	#Puisque le deplacement sera petit, on peut verifier la totalite du rectangle dont la diagonale est la
 	#trajectoire que l'on souhaite verifier. Ainsi si la ligne est libre mais que l'on se rapproche
@@ -140,6 +141,34 @@ def printList(liste):
 		print(liste[i].preced)
 		print("")
 
+def invers_list(listinit):
+    listres = []
+
+    for i in range(len(listinit)):
+        listres.append(listinit[len(listinit)-1 - i])
+
+    return listres
+
+def reduce_list(list_path, img):
+    #Regarde chaque point si son parent est accessible depuis le point actuel pour reduire le nombre de point de la liste et ne garder que quelques points cles
+    listres = []
+
+    listres.append(list_path[-1])
+    pre = list_path[listres[-1].preced]
+
+    while(pre != None):
+        if(pathfree(listres[-1], list_path[pre], img)):
+            pre = list_path[pre].preced
+
+        else:
+            listres.append(list_path[pre])
+            pre = listres[-1].preced
+
+    listres.append(list_path[0])
+
+    return invers_list(listres)
+
+
 def main(rob,objective):
     pas = 10 #la longueur des pas du RRT
 
@@ -194,7 +223,19 @@ def main(rob,objective):
         cv2.imshow('map_RRT',imgaff)
         cv2.waitKey(5)
 
-    return ListePoints
+    # Debut de la partie reduction du nombre de points
+    ListKeyPoints = reduce_list(ListePoints, img)
+
+    for i in range(1, len(ListKeyPoints)):
+        cv2.line(imgaff,(ListKeyPoints[i-1].x,ListKeyPoints[i-1].y),(ListKeyPoints[i].x,ListKeyPoints[i].y),(255,0,0),2)
+
+    cv2.imshow('map_RRT',imgaff)
+    cv2.waitKey(5)
+
+    return ListKeyPoints
+    #Fin de la partie reduction du nombre de points
+
+    #return ListePoints     #Precedent return
 
 def test(rob,objective):
     pas = 20 #la longueur des pas du RRT
