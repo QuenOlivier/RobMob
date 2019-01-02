@@ -55,9 +55,9 @@ def dist(pos, goal):
 	return math.sqrt((gx - px)**2 + (gy - py)**2)
 
 def listeproximite(listpoints, goal):
-	listcop = copy.copy(listpoints)		#Si bug, essayer la deepcopy, mais copy devrait sufire
+    listcop = copy.copy(listpoints)		#Si bug, essayer la deepcopy, mais copy devrait sufire
     listrand = []
-	listres = []
+    listres = []
     nb = 0;
 
     while((len(listcop) > 0) and (nb < 20)): #On prend les 20 derniers points de la liste de points
@@ -174,6 +174,21 @@ def printList(liste):
 		print(liste[i].preced)
 		print("")
 
+#Tested, work fine
+def retrieve_list(listinit):
+    listres = []
+    listres.append(listinit[-1])
+    indice=listinit[-1].preced
+    i = 0
+    while(indice != None):
+        listres.append(listinit[indice])
+        indice=listinit[indice].preced
+        i=i+1
+
+    listres=invers_list(listres)
+    return listres
+
+#Tested, works fine
 def invers_list(listinit):
     listres = []
 
@@ -186,20 +201,20 @@ def reduce_list(list_path, img):
     #Regarde chaque point si son parent est accessible depuis le point actuel pour reduire le nombre de point de la liste et ne garder que quelques points cles
     listres = []
 
-    listres.append(list_path[-1])
-    pre = list_path[listres[-1].preced]
-
-    while(pre != None):
-        if(pathfree(listres[-1], list_path[pre], img)):
-            pre = list_path[pre].preced
-
-        else:
-            listres.append(list_path[pre])
-            pre = listres[-1].preced
-
     listres.append(list_path[0])
+    indice=0
 
-    return invers_list(listres)
+    while(indice <= len(list_path)-2):
+        j=len(list_path)-1
+
+        while((not pathfree(listres[-1], list_path[j], img)) and j > indice):
+            j=j-1
+
+        listres.append(list_path[j])
+        indice=j
+
+
+    return listres
 
 
 def main(rob,objective):
@@ -249,22 +264,37 @@ def main(rob,objective):
 
         		#Test pour voir si le dernier point a une vue directe sur l'objectif, si oui, on fini le RRT
         if(pathfree(ListePoints[-1], goal, img) == True):
+            goal.preced=len(ListePoints)-1
+            goal.indice=len(ListePoints)
             ListePoints.append(goal)						#Ajout de l'objectif a l'arbre en position finale
-            ListePoints[-1].preced = len(ListePoints)-2		#Changement du parent de l'objectif pour le dernier point calcule
-            ListePoints[-1].indice = len(ListePoints)-1		#Changement de l'indice de l'objectif pour correspondre a la liste
             cv2.line(imgaff,(ListePoints[-1].x,ListePoints[-1].y),(ListePoints[ListePoints[-1].preced].x,ListePoints[ListePoints[-1].preced].y),(0,0,0),1)
 
         cv2.imshow('map_RRT',imgaff)
         cv2.waitKey(5)
 
+
+    print('Fin du path finding..........\n')
+    path= []
+    path=retrieve_list(ListePoints)
+
+    for i in range(0,len(path)-1):
+        cv2.line(imgaff,(path[i].x,path[i].y),(path[i+1].x,path[i+1].y),(0,0,255),1)
+        cv2.imshow('map_RRT',imgaff)
+        cv2.waitKey(200)
+    cv2.imshow('map_RRT',imgaff)
+    cv2.waitKey(500)
+
+
+    print('Reduction du nombre de point en cours...................\n')
     # Debut de la partie reduction du nombre de points
-    ListKeyPoints = reduce_list(ListePoints, img)
+    ListKeyPoints = reduce_list(path, img)
 
     for i in range(1, len(ListKeyPoints)):
         cv2.line(imgaff,(ListKeyPoints[i-1].x,ListKeyPoints[i-1].y),(ListKeyPoints[i].x,ListKeyPoints[i].y),(255,0,0),2)
-
+        cv2.imshow('map_RRT',imgaff)
+        cv2.waitKey(200)
     cv2.imshow('map_RRT',imgaff)
-    cv2.waitKey(0)
+    cv2.waitKey(1000)
 
     return ListKeyPoints
     #Fin de la partie reduction du nombre de points

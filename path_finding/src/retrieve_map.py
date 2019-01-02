@@ -76,7 +76,7 @@ class PrintMap:
 
 def main():
 	test=PrintMap()
-	cv2.namedWindow('map hector', 0)
+
 	# refresh the image on the screen
 	running=True
 	while(running):
@@ -94,9 +94,12 @@ def main():
 
 
 			print("Starting RTT algorithm")
-			liste=path_finding.main(test._robot,test._goal)
+			path=path_finding.main(test._robot,test._goal)
 			#path_finding.test(test._robot,test._goal)
 			print("Ended path finding\n")
+			cv2.namedWindow('map hector', 0)
+			for i in range(1, len(path)):
+				cv2.line(img,(path[i-1].x,path[i-1].y),(path[i].x,path[i].y),(0,0,255),2)
 			cv2.imshow('map hector',img)
 			cv2.waitKey(0)
 			running=False
