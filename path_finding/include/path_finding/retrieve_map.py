@@ -80,8 +80,8 @@ def CVtoRealspaceList(liste,refMap):
 	res=refMap._map._resolution
 
 	for i in range(0,len(liste)):
-		liste[i]._x=liste[i]._x*res + originX
-		liste[i]._y=(height-liste[i]._y)*res + originY
+		liste[i].x=liste[i].x*res + originX
+		liste[i].y=(height-liste[i].y)*res + originY
 
 
 def main():
@@ -119,8 +119,7 @@ def main():
 
 	# spin() simply keeps python from exiting until this node is stopped
 	CVtoRealspaceList(path,test)
-	print("X =",path[0]._x,", Y=",path[0]._y)
-	rospy.spin()
+	return path
 
 
 if __name__ == '__main__':
