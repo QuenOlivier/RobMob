@@ -218,10 +218,10 @@ def reduce_list(list_path, img):
 
 
 def main(rob,objective):
-    pas = 10 #la longueur des pas du RRT
+    pas = 15 #la longueur des pas du RRT
 
     #Recuperation de la map
-    kernel = np.ones((5,5),np.uint8)
+    kernel = np.ones((10,10),np.uint8)
     map=cv2.imread("map.png",0)
     img = cv2.erode(map,kernel,iterations = 1)
     yimg, ximg = img.shape[:2]

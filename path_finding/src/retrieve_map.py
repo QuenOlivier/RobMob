@@ -71,7 +71,17 @@ class PrintMap:
 		print(self._map._resolution)
 		print("\n\n")
 
+#Convert a list of openCV points to RealSpace points related to a map
+def CVtoRealspaceList(liste,refMap):
+	height=refMap._map._height
+	width=refMap._map._width
+	originX=refMap._map._origin.position.x
+	originY=refMap._map._origin.position.y
+	res=refMap._map._resolution
 
+	for i in range(0,len(liste)):
+		liste[i]._x=liste[i]._x*res + originX
+		liste[i]._y=(height-liste[i]._y)*res + originY
 
 
 def main():
@@ -79,6 +89,7 @@ def main():
 
 	# refresh the image on the screen
 	running=True
+	path=None
 	while(running):
 		if(test._flagMap and test._flagRob):
 			img=cv2.cvtColor(test._map._map, cv2.COLOR_GRAY2RGB)
@@ -107,7 +118,9 @@ def main():
 
 
 	# spin() simply keeps python from exiting until this node is stopped
-    	rospy.spin()
+	CVtoRealspaceList(path,test)
+	print("X =",path[0]._x,", Y=",path[0]._y)
+	rospy.spin()
 
 
 if __name__ == '__main__':
