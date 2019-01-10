@@ -1,6 +1,6 @@
 TO DO :
 -fonction suivi de trajectoire
--fonction path finding (arbres semi-aléatoires)
--extraction de la map       OK
--traitement de l'image
--fonction récupération d'un point voulu
+-fonction path finding (arbres semi-aléatoires)	OK
+-extraction de la map       			OK
+-traitement de l'image				OK
+-fonction récupération d'un point voulu 	OK

@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>path</name>
+  <version>0.0.0</version>
+  <description>Package for the path finding</description>
+
+
+  <maintainer email="quentin.olivier1996@gmail.com">Quentin</maintainer>
+  <license>GPLv3</license>
+
+  <author email="quentin.olivier1996@gmail.com">Quentin</author>
+  <author email="tududu@tudu.tu">Mael</author>
+
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_export_depend>geometry_msgs</build_export_depend>
+  <build_export_depend>nav_msgs</build_export_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>rospy</exec_depend>
+  <export>
+
+
+  </export>
+</package>
