@@ -223,27 +223,37 @@ def reduce_list(list_path, img):
 
     return listres
 
-#Ajoute des points tout les n pixel entre chaque point de List.
+#Ajoute des points a List de maniere a ce que la distance entre chaque point soit inferieure ou egale a n
 def add_points_path(List, n):
-	return List
-	listcop = copy.copy(listpoints)
+	#return List
+
+	#Cree la liste de retour et une copie de la liste originale
+	listcop = copy.copy(List)
 	listret = []
 
+	#Ajoute le premier element de la liste copiee a la list de retours, et le suprime de la liste copiee
 	listret.append(listcop[0])
 	del listcop[0]
+
+	#Boucle pour parcourir toute la liste copiee
 	while(len(listcop) > 0):
+		#Mesure de la distance entre deux points consecutifs de la liste originale et calcul du nombre de points a intercaler
 		d = dist(listret[-1],listcop[0])
+		nb_pts = 1		#nb de points a intercaler +1
 		while(d > n):
-			x2 = listcop[0].x
-			x1 = listret[-1].x
-			y2 = listcop[0].y
-			y1 = listret[-1].y
-			a = (x2-x1)/(y2-y1)
+			d = d/2
+			nb_pts = nb_pts*2
 
-
+		#Calcul et ajout de tout les points a intercaler
+		for i in range(1,nb_pts):
+			x = listret[-1].x + (listcop[0].x - listret[-1].x)*i/nb_pts
+			y = listret[-1].y + (listcop[0].y - listret[-1].y)*i/nb_pts
+			listret.append(point(int(x), int(y), None, None))
 
 		listret.append(listcop[0])
 		del listcop[0]
+
+	return listret
 
 
 
