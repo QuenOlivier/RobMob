@@ -207,41 +207,35 @@ def reduce_list(list_path, img):
 
 #Ajoute des points a List de maniere a ce que la distance entre chaque point soit inferieure ou egale a n
 def add_points_path(List, n):
-	#return List
+    #return List
 
-	#Cree la liste de retour et une copie de la liste originale
-	listcop = copy.copy(List)
-	listret = []
+    #Cree la liste de retour et une copie de la liste originale
+    listcop = copy.copy(List)
+    listret = []
 
 	#Ajoute le premier element de la liste copiee a la list de retours, et le suprime de la liste copiee
-	listret.append(listcop[0])
-	del listcop[0]
+    listret.append(listcop[0])
+    del listcop[0]
 
 	#Boucle pour parcourir toute la liste copiee
-	while(len(listcop) > 0):
+    while(len(listcop) > 0):
 		#Mesure de la distance entre deux points consecutifs de la liste originale et calcul du nombre de points a intercaler
-		d = dist(listret[-1],listcop[0])
-		nb_pts = 1		#nb de points a intercaler +1
-		while(d > n):
+        d = dist(listret[-1],listcop[0])
+        nb_pts = 1		#nb de points a intercaler +1
+        while(d > n):
 			d = d/2
 			nb_pts = nb_pts*2
 
 		#Calcul et ajout de tout les points a intercaler
         xret = listret[-1].x
         yret = listret[-1].y
-		for i in range(1,nb_pts):
-			x = xret + (listcop[0].x - xret)*i/nb_pts
-			y = yret + (listcop[0].y - yret)*i/nb_pts
-			listret.append(point(int(x), int(y), None, None))
-
-		#Ajout dans la liste de retour du point cle suivant, et suppression dans la liste copiee
-		listret.append(listcop[0])
-		del listcop[0]
-
-	#On retourne la liste ainsi cree
-	return listret
-
-
+        for i in range(1,nb_pts):
+            x = xret + (listcop[0].x - xret)*i/nb_pts
+            y = yret + (listcop[0].y - yret)*i/nb_pts
+            listret.append(point(int(x), int(y), None, None))
+        listret.append(listcop[0])
+        del listcop[0]
+    return listret
 
 def main(rob,objective):
     pas = 15 #la longueur des pas du RRT

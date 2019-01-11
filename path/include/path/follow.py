@@ -37,6 +37,19 @@ class Minilab:
         msg=Twist(lin,ang)
         self._pub.publish(msg)
 
+def correctAngle(prec,angle):
+    betaBis=angle
+
+    if abs(prec-angle)>2:
+        print("Hello corrector")
+        print "Current angle :",angle,", prev beta :",prec
+        if abs(prec)<2*math.pi :
+            if(angle<0):
+                betaBis=2*math.pi+angle
+            else:
+                betaBis=angle-2*math.pi
+    return betaBis
+
 def main():
     rob=Minilab()
     path=retrieve_map.main()
@@ -47,26 +60,32 @@ def main():
     ka=0.5
     kp=0.2
 
-    #Parametrage de filtrage passe haut
-    k2=0.1
-
-    angPrec=0
-
-    precDist=0.3
+    precisionDist=0.3
     seuilMinVit=0.2
     seuilMaxVit=1
-    precAngle=0.05
+    precisionAngle=0.05
     seuilMinAngle=0.65
     seuilMaxAngle=1
+    rho=5
+    lin=0
+    ang=0
+    angPrec=0
+
+    #Parametrage de filtrage passe haut
+    k2=0.1
 
     reachedAng=False
     flagLast=False
     i=20
-    rho=5
+
+    e1=rob._path[0].x-rob._state.x
+    e2=rob._path[0].y-rob._state.y
+    beta=math.atan2(e2,e1)
+    alpha=beta - rob._state.z
 
     while(path != None):
 
-        while(rho>precDist):
+        while(rho>precisionDist):
             theta=rob._state.z
             x=rob._state.x
             y=rob._state.y
@@ -75,45 +94,57 @@ def main():
             e2=rob._path[0].y-y
             rho = math.sqrt(e1*e1 + e2*e2)
             #commande polaire
+
             beta=math.atan2(e2,e1)
-            alpha = beta - theta
+
+            alpha = correctAngle(alpha,beta - theta)
+
             ang = ka * alpha
             if(reachedAng):
                 ang=0
-            elif(abs(alpha)<precAngle):
+            elif(abs(alpha)<precisionAngle):
                 ang=0
                 reachedAng=True
-            elif(abs(alpha)>2*precAngle):
+            elif(abs(alpha)>2*precisionAngle):
                 reachedAng=False
             elif(alpha>seuilMaxAngle):
-                ang=2*ang
+                ang= 2 * ang
             elif(alpha<seuilMaxAngle):
-                ang= 2*ang
-            ang=ang+k2*angPrec
+                ang= 2 * ang
+
+            ang= ang + k2*angPrec
             angPrec=ang
 
+            if(ang>1.5):
+                ang=1.5
+
             lin=kp*rho
-            if(lin>seuilMaxVit):
+            #if(abs(alpha)>math.pi):
+            #    lin=0
+            if(abs(alpha)>seuilMinAngle):
+                lin=0.1
+            elif(lin>seuilMaxVit):
                 lin=seuilMaxVit
             elif(lin<seuilMinVit):
                 lin=seuilMinVit
-            elif(abs(alpha)>seuilMinAngle):
-                lin=0.1
+
+
 
             if i==20:
                 print "Angle robot:",theta,", angle beta:",beta
                 print "Distance restante:",rho,", erreur angulaire alpha:",alpha,"\n"
+                print "Commande : lin :",lin,", ang:",ang,"\n"
                 i=0
             i=i+1
             rob.setSpeed(lin,ang)
             time.sleep(0.1)
-        print("Distance faible")
+        print("Point atteint")
         reachedAng=False
         rho=5
         if(len(path)==2):
             print("Plus qu'une etape\n")
-            precDist=0.05
-            precAngle=0.01
+            precisionDist=0.05
+            precisionAngle=0.01
             seuilMaxVit=0.5
             seuilMinVit=0.1
             seuilMinAngle=seuilMinAngle/2
