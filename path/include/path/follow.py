@@ -44,10 +44,15 @@ def main():
     rob.setPath(path)
 
     #Parametre de suivi
-    ka=0.3
+    ka=0.5
     kp=0.2
 
-    precDist=0.44
+    #Parametrage de filtrage passe haut
+    k2=0.1
+
+    angPrec=0
+
+    precDist=0.3
     seuilMinVit=0.2
     seuilMaxVit=1
     precAngle=0.05
@@ -56,22 +61,21 @@ def main():
 
     reachedAng=False
     flagLast=False
-    i=0
+    i=20
     rho=5
 
     while(path != None):
+
         while(rho>precDist):
             theta=rob._state.z
             x=rob._state.x
             y=rob._state.y
 
-            e1=x-rob._path[0].x
-            e2=y-rob._path[0].y
+            e1=rob._path[0].x-x
+            e2=rob._path[0].y-y
             rho = math.sqrt(e1*e1 + e2*e2)
             #commande polaire
-            beta=math.atan2(e2,e1)+math.pi
-            if beta > math.pi:
-                beta = -2*math.pi+beta
+            beta=math.atan2(e2,e1)
             alpha = beta - theta
             ang = ka * alpha
             if(reachedAng):
@@ -82,9 +86,11 @@ def main():
             elif(abs(alpha)>2*precAngle):
                 reachedAng=False
             elif(alpha>seuilMaxAngle):
-                ang=ka*alpha*alpha*ka
+                ang=2*ang
             elif(alpha<seuilMaxAngle):
-                ang= - ka*alpha*alpha*ka
+                ang= 2*ang
+            ang=ang+k2*angPrec
+            angPrec=ang
 
             lin=kp*rho
             if(lin>seuilMaxVit):
@@ -95,7 +101,8 @@ def main():
                 lin=0.1
 
             if i==20:
-                print "Distance restante:",rho," ,erreur angulaire alpha:",alpha,"\n"
+                print "Angle robot:",theta,", angle beta:",beta
+                print "Distance restante:",rho,", erreur angulaire alpha:",alpha,"\n"
                 i=0
             i=i+1
             rob.setSpeed(lin,ang)
