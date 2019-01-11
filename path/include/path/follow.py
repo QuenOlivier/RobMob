@@ -44,67 +44,82 @@ def main():
     rob.setPath(path)
 
     #Parametre de suivi
-    l1=0.05
-    k1=0.05
-    k2=0.01
+    ka=0.3
 
-    kp=0.1
-    ka=0.2
-    kb=0.01
-    prec=0.3
+    precDist=0.44
+    seuilMinVit=0.2
+    seuilMaxVit=1
+    precAngle=0.05
+    seuilMinAngle=0.65
+    seuilMaxAngle=1
 
     reachedAng=False
+    flagLast=False
+    i=0
 
     while(path != None):
-        print("On entre dans la boucle")
-        theta=rob._state.z
-        x=rob._state.x
-        y=rob._state.y
-        xp=x+l1*math.cos(theta)
-        yp=y+l1*math.sin(theta)
+        while(rho>precDist):
+            theta=rob._state.z
+            x=rob._state.x
+            y=rob._state.y
+            xp=x+l1*math.cos(theta)
+            yp=y+l1*math.sin(theta)
 
-        e1=x-rob._path[0].x
-        e2=y-rob._path[0].y
-        rho = math.sqrt(e1*e1 + e2*e2)
-        if( rho < 0.6):
-            kp=kp*2
-        if( rho < prec):
-            print("Distance faible")
-            reachedAng=False
-            kp=0.1
-            if(len(path)==2):
-                print("Plus qu'une etape")
-                prec=0.05
-                del path[0]
-            elif(len(path)==1):
-                print("Fin de parcours")
-                path=None
-                rob.setSpeed(0,0)
-            else:
-                del path[0]
-                print "Il reste ",len(path)," etapes"
-        else:
+            e1=x-rob._path[0].x
+            e2=y-rob._path[0].y
+            rho = math.sqrt(e1*e1 + e2*e2)
             #commande polaire
             beta=math.atan2(e2,e1)+math.pi
             if beta > math.pi:
                 beta = -2*math.pi+beta
             alpha = beta - theta
+            ang = ka * alpha
             if(reachedAng):
                 ang=0
-            elif(alpha<0.01 and alpha>-0.01):
+            elif(abs(alpha)<precAngle):
                 ang=0
                 reachedAng=True
-            else:
-                ang = ka * alpha
+            elif(abs(alpha)>2*precAngle):
+                reachedAng=False
+            elif(alpha>seuilMaxAngle):
+                ang=ka*alpha*alpha*ka
+            elif(alpha<seuilMaxAngle):
+                ang= - ka*alpha*alpha*ka
 
-            lin = kp * rho
-            if lin > 3:
-                lin=3
+            lin=kp*rho
+            if(lin>seuilMaxVit):
+                lin=seuilMaxVit
+            elif(lin<seuilMinVit):
+                lin=seuilMinVit
+            elif(abs(alpha)>seuilMinAngle):
+                lin=0.1
 
-            print "Angle robot:",theta," ,angle beta:",beta," ,angle alpha:",alpha
-            print "Consigne angulaire:",ang
+            if i==20:
+                print "Distance restante:",rho," ,erreur angulaire alpha:",alpha,"\n"
+                i=0
+            i=i+1
             rob.setSpeed(lin,ang)
-        time.sleep(0.1)
+            time.sleep(0.1)
+        print("Distance faible")
+        reachedAng=False
+        rho=5
+        if(len(path)==2):
+            print("Plus qu'une etape\n")
+            precDist=0.05
+            precAngle=0.01
+            seuilMaxVit=0.5
+            seuilMinVit=0.1
+            seuilMinAngle=seuilMinAngle/2
+            del path[0]
+        elif(len(path)==1):
+            print("Fin de parcours\n")
+            path=None
+            rho=0
+            rob.setSpeed(0,0)
+        else:
+            del path[0]
+            print "Il reste ",len(path)," etapes\n"
+
 
 
 if __name__ == '__main__':
