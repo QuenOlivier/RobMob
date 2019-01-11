@@ -140,17 +140,17 @@ def dqpoint(listprox, goal, dq, img):
         else:   #
             free = False
 
-
+        #Si le chemin n'est pas libre, on avance dans la liste de proximite et on recommence.
+        #Si la liste de proximite est vide, on renvoi un point de coordonnes 0,0
         if(not free):
             indice_test = indice_test +1
             if(len(listprox)==indice_test):
                 return point(0,0,0,None)
 
     np=point(xnp, ynp, 0, indpre)
-    #print(pathfree(np, listprox[indice_test], img) )
-    #print(free)
     return np
 
+#Fonction d'affichage d'une liste.
 def printList(liste):
 	for i in range(len(liste)):
 		print("x :")
@@ -163,7 +163,7 @@ def printList(liste):
 		print(liste[i].preced)
 		print("")
 
-#Tested, work fine
+#Parcourts la liste de points cree par le RRT et recree le chemin entre l'ojectif et le point de depart
 def retrieve_list(listinit):
     listres = []
     listres.append(listinit[-1])
@@ -177,7 +177,7 @@ def retrieve_list(listinit):
     listres=invers_list(listres)
     return listres
 
-#Tested, works fine
+#Inverse l'ordre d'une liste
 def invers_list(listinit):
     listres = []
 
@@ -186,8 +186,8 @@ def invers_list(listinit):
 
     return listres
 
+#Regarde chaque point si son parent est accessible depuis le point actuel pour reduire le nombre de point de la liste et ne garder que quelques points cles
 def reduce_list(list_path, img):
-    #Regarde chaque point si son parent est accessible depuis le point actuel pour reduire le nombre de point de la liste et ne garder que quelques points cles
     listres = []
 
     listres.append(list_path[0])
@@ -196,6 +196,9 @@ def reduce_list(list_path, img):
     while(indice <= len(list_path)-2):
         j=len(list_path)-1
 
+        #On Parcourt la liste des points du RRT et on recherche le point le plus eloigne sur lequel nous avons une vision.
+        #Nous ne gardons que le point initial et ce point trouve.
+        #Ainsi nous ne gardons que quelques points cles representants les angles du chemin trouve
         while((not pathfree(listres[-1], list_path[j], img)) and j > indice):
             j=j-1
 
