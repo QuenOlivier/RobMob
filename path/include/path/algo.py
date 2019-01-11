@@ -32,6 +32,8 @@ import math
 import cv2
 import numpy as np
 
+#Classe point qui possede des coordonnes x et y en pixel, et l'indice precedent et suivant d'une liste dans laquelle il est stocke.
+#C'est une classe permettrant de simuler un liste chainee.
 class point:
     def __init__(self, xp, yp, ind, pre):
         self.x = xp
@@ -40,7 +42,7 @@ class point:
         self.preced = pre 	#Indice du point precedent dans la liste des points
 
 
-#Cree un nouveau point dans une case libre
+#Cree un nouveau point de coordonnes aleatoires
 def randompoint(xmax, ymax, img):
 	x = random.randint(0, xmax-1)
 	y = random.randint(0, ymax-1)
@@ -49,6 +51,7 @@ def randompoint(xmax, ymax, img):
 	#	y = random.randint(0, ymax-1)
 	return point(x, y, 0, 0)
 
+#Calcul la distance entre deux points pos et goal
 def dist(pos, goal):
 	px = pos.x
 	py = pos.y
@@ -56,6 +59,8 @@ def dist(pos, goal):
 	gy = goal.y
 	return math.sqrt((gx - px)**2 + (gy - py)**2)
 
+#Cree une liste comportant 50 points au maximum, incluant les 20 derniers points du RRT et 30 autres points tires aleatoirement dans tout ceux du RRT
+#Trie cette liste par ordre de proximite avec le point goal. Le premier point est le plus proche.
 def listeproximite(listpoints, goal):
     listcop = copy.copy(listpoints)		#Si bug, essayer la deepcopy, mais copy devrait sufire
     listrand = []
@@ -218,12 +223,35 @@ def reduce_list(list_path, img):
 
     return listres
 
+#Ajoute des points tout les n pixel entre chaque point de List.
+def add_points_path(List, n):
+	return List
+	listcop = copy.copy(listpoints)
+	listret = []
+
+	listret.append(listcop[0])
+	del listcop[0]
+	while(len(listcop) > 0):
+		d = dist(listret[-1],listcop[0])
+		while(d > n):
+			x2 = listcop[0].x
+			x1 = listret[-1].x
+			y2 = listcop[0].y
+			y1 = listret[-1].y
+			a = (x2-x1)/(y2-y1)
+
+
+
+		listret.append(listcop[0])
+		del listcop[0]
+
+
 
 def main(rob,objective):
     pas = 15 #la longueur des pas du RRT
 
     #Recuperation de la map
-    kernel = np.ones((10,10),np.uint8)
+    kernel = np.ones((25,25),np.uint8)
     map=cv2.imread("map.png",0)
     img = cv2.erode(map,kernel,iterations = 1)
     yimg, ximg = img.shape[:2]
@@ -291,14 +319,16 @@ def main(rob,objective):
     # Debut de la partie reduction du nombre de points
     ListKeyPoints = reduce_list(path, img)
 
-    for i in range(1, len(ListKeyPoints)):
-        cv2.line(imgaff,(ListKeyPoints[i-1].x,ListKeyPoints[i-1].y),(ListKeyPoints[i].x,ListKeyPoints[i].y),(255,0,0),2)
+    ListPathPoints = add_points_path(ListKeyPoints, 20)
+
+    for i in range(1, len(ListPathPoints)):
+        cv2.line(imgaff,(ListPathPoints[i-1].x,ListPathPoints[i-1].y),(ListPathPoints[i].x,ListPathPoints[i].y),(255,0,0),2)
         cv2.imshow('map_RRT',imgaff)
         cv2.waitKey(200)
     cv2.imshow('map_RRT',imgaff)
     cv2.waitKey(1000)
 
-    return ListKeyPoints
+    return ListPathPoints
     #Fin de la partie reduction du nombre de points
 
     #return ListePoints     #Precedent return
