@@ -45,6 +45,7 @@ def main():
 
     #Parametre de suivi
     ka=0.3
+    kp=0.2
 
     precDist=0.44
     seuilMinVit=0.2
@@ -56,14 +57,13 @@ def main():
     reachedAng=False
     flagLast=False
     i=0
+    rho=5
 
     while(path != None):
         while(rho>precDist):
             theta=rob._state.z
             x=rob._state.x
             y=rob._state.y
-            xp=x+l1*math.cos(theta)
-            yp=y+l1*math.sin(theta)
 
             e1=x-rob._path[0].x
             e2=y-rob._path[0].y
