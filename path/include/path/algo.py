@@ -94,35 +94,12 @@ def listeproximite(listpoints, goal):
 
     return listres
 
-def listeproximite_old(listpoints, goal):
-    listcop = copy.copy(listpoints)     #Si bug, essayer la deepcopy, mais copy devrait sufire
-    listres = []
-
-    while(len(listcop) > 0):
-        distmin = dist(listcop[0], goal)
-        ind = 0
-        for i in range(len(listcop)):
-            if dist(listcop[i], goal) < distmin :
-                distmin = dist(listcop[i], goal)
-                ind = i
-
-        listres.append(listcop[ind])
-        del listcop[ind]
-
-    return listres
-
-
+#Regarde si le chemin entre les points pinit et goal est libre
 def pathfree(pinit, goal, img):
 	#Puisque le deplacement sera petit, on peut verifier la totalite du rectangle dont la diagonale est la
 	#trajectoire que l'on souhaite verifier. Ainsi si la ligne est libre mais que l'on se rapproche
 	#dangeureusement du mur, nous n'emprinterons pas ce chemin
 
-	#print(pinit.x)
-	#print(pinit.y)
-	#print(goal.x)
-	#print(goal.y)
-    #if(img[goal.y,goal.x]==0):
-    #    return False
 	for i in range(min(pinit.x, goal.x),max(pinit.x, goal.x) +1):
 		for j in range(min(pinit.y, goal.y),max(pinit.y, goal.y) +1):
 			#print(img[j, i])
@@ -130,19 +107,22 @@ def pathfree(pinit, goal, img):
 				return False
 	return True
 
+#Cree un point a une distance dq du premier point de listprox tel que cette creation est possible.
+#Si le premier point ne peut être utilise pour creer dq, alors on passe au second, etc.
 def dqpoint(listprox, goal, dq, img):
-    #cv2.imshow('temp',img)
-    #cv2.waitKey(500)
+    #Initialisation des parametres du while
     free = False
     xnp = 0
     ynp = 0
     indpre = 0
     indice_test = 0
-    np=point(0,0,0,0)
+
+    #Boucle tant que l'on a pas trouve un point avec un chemin libre
     while(free == False):
         x = listprox[indice_test].x
         y = listprox[indice_test].y
         norm=dist(listprox[indice_test], goal)
+        #On regarde la distance entre le point et l'objectif, et en fonction on place le point sur l'objectif ou dans sa direction
         if(norm != 0):
             if(norm<dq):
                 xnp = goal.x
@@ -150,6 +130,8 @@ def dqpoint(listprox, goal, dq, img):
             else:
                 xnp = int(x + (goal.x - x)*(dq/norm))
                 ynp = int(y + (goal.y - y)*(dq/norm))
+
+            #Creation du point et on verifie si le chemin est libre.
             img2=img
             np=point(xnp, ynp, 0, 0)
             free = pathfree(listprox[indice_test], np , img2)
@@ -250,15 +232,18 @@ def add_points_path(List, n):
 			y = listret[-1].y + (listcop[0].y - listret[-1].y)*i/nb_pts
 			listret.append(point(int(x), int(y), None, None))
 
+		#Ajout dans la liste de retour du point cle suivant, et suppression dans la liste copiee
 		listret.append(listcop[0])
 		del listcop[0]
 
+	#On retourne la liste ainsi cree
 	return listret
 
 
 
 def main(rob,objective):
     pas = 15 #la longueur des pas du RRT
+    dist_path_points = 30 #Distance maximale en pixel entre deux points du chemin
 
     #Recuperation de la map
     kernel = np.ones((25,25),np.uint8)
@@ -329,7 +314,7 @@ def main(rob,objective):
     # Debut de la partie reduction du nombre de points
     ListKeyPoints = reduce_list(path, img)
 
-    ListPathPoints = add_points_path(ListKeyPoints, 20)
+    ListPathPoints = add_points_path(ListKeyPoints, dist_path_points)
 
     for i in range(1, len(ListPathPoints)):
         cv2.line(imgaff,(ListPathPoints[i-1].x,ListPathPoints[i-1].y),(ListPathPoints[i].x,ListPathPoints[i].y),(255,0,0),2)
