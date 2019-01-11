@@ -137,7 +137,7 @@ def dqpoint(listprox, goal, dq, img):
             free = pathfree(listprox[indice_test], np , img2)
             indpre = listprox[indice_test].indice
 
-        else:
+        else:   #
             free = False
 
 
@@ -227,9 +227,11 @@ def add_points_path(List, n):
 			nb_pts = nb_pts*2
 
 		#Calcul et ajout de tout les points a intercaler
+        xret = listret[-1].x
+        yret = listret[-1].y
 		for i in range(1,nb_pts):
-			x = listret[-1].x + (listcop[0].x - listret[-1].x)*i/nb_pts
-			y = listret[-1].y + (listcop[0].y - listret[-1].y)*i/nb_pts
+			x = xret + (listcop[0].x - xret)*i/nb_pts
+			y = yret + (listcop[0].y - yret)*i/nb_pts
 			listret.append(point(int(x), int(y), None, None))
 
 		#Ajout dans la liste de retour du point cle suivant, et suppression dans la liste copiee
