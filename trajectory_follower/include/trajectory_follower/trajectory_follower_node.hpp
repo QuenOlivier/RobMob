@@ -38,8 +38,6 @@ private:
   void onCommandStatus(CommandStatus &msg);
   void onManualCommand(Twist &msg);
   void onOdom(Odometry &msg);
-  bool isMapOk();
-  void updateState(State state);
 };
 
 }
