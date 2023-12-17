@@ -56,7 +56,7 @@ bool MinilabManagerInterface::isTrajectoryOk(){
 }
 
 void MinilabManagerInterface::updateState(uint state){
-  current_state_ = state;
+  current_state_.command_status = state;
 }
 
 void MinilabManagerInterface::update(){
