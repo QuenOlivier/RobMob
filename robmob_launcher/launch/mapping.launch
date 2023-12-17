@@ -9,5 +9,12 @@
   <node name="slam" pkg="gmapping" type="slam_gmapping" output="screen"/>
   <node name="manager_interface" pkg="minilab_manager" type="minilab_manager_node" output="screen"/>
   <node name="trajectory_follower" pkg="trajectory_follower" type="trajectory_follower_node" output="screen"/>
+  <node
+    pkg="rviz"
+    exec="rviz"
+    name="rviz"
+    output="screen"
+    args="-d $(find robmob_launcher)/config/top_down_map.rviz"
+  />
 
 </launch>
