@@ -15,27 +15,22 @@ from geometry_msgs.msg import Twist, Vector3
 ## \class template
 # Class used to show how a class works with ROS callbacks
 class TurtleTeleop:
-	
+
 	def __init__(self):
 		self._axes=[0,0,0,0,0,0,0,0]
 		self._buttons=[0,0,0,0,0,0,0,0,0,0,0]
 		self._turn=0
-		rospy.Rate(1)	
-		self._joy_sub=rospy.Subscriber("joy", Joy, self.getJoy)	
-		self._turtle_pub=rospy.Publisher("/cmd_vel",Twist,queue_size=1)
-	
+		rospy.Rate(1)
+		self._joy_sub=rospy.Subscriber("joy", Joy, self.getJoy)
+		self._turtle_pub=rospy.Publisher("/teleoperation/cmd_vel",Twist,queue_size=1)
+
 	##Fetch the data.
 	#
 	# \details Extract the information from the ROS message and set it in a usable format (e.g float instead of str).
 	def getJoy(self,data):
 		self._axes=data.axes
 		self._buttons=data.buttons
-		
-		
 
-		###########################################
-		# Write your own code here
-		###########################################
 
 ## \brief This is your main function
 # \details This is where you will put your argument parseer lines and main code
@@ -62,7 +57,7 @@ def main():
 
 
 
-## \brief these lines are simply made to check if this script was called in a terminal or imported 
+## \brief these lines are simply made to check if this script was called in a terminal or imported
 if __name__ == '__main__':
-	
+
 	main()
