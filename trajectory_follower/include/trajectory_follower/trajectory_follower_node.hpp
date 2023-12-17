@@ -16,7 +16,7 @@ class TrajectoryFollower {
 
 public:
   TrajectoryFollower(ros::NodeHandle *nh);
-  virtual ~TrajectoryFollower();
+  ~TrajectoryFollower(){};
 
   void update();
 

@@ -14,15 +14,15 @@ class MinilabManagerInterface {
 
 public:
   MinilabManagerInterface(ros::NodeHandle *nh);
-  virtual ~MinilabManagerInterface();
+  ~MinilabManagerInterface(){};
 
   void update();
 
 private:
   ros::NodeHandle nh_;
 
-  ros::Subscriber sub_map_;
-  ros::Subscriber sub_trajectory_;
+  // ros::Subscriber sub_map_;
+  // ros::Subscriber sub_trajectory_;
   ros::ServiceServer auto_request_server_;
   ros::ServiceServer manual_request_server_;
 
