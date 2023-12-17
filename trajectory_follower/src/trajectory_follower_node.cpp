@@ -1,12 +1,10 @@
-#include <minilab_manager/interface.hpp>
+#include <trajectory_follower/trajectory_follower_node.hpp>
 
 #include <iostream>
 #include <string>
 
-using std_srvs::Empty;
-using std_srvs::Trigger;
 
-namespace minilab_manager
+namespace trajectory
 {
 
 
