@@ -4,10 +4,6 @@
 #include <string>
 
 
-namespace trajectory
-{
-
-
 TrajectoryFollower::TrajectoryFollower(ros::NodeHandle *nh) :
 nh_(*nh)
 {
@@ -56,7 +52,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "trajectory_follower");
   ros::NodeHandle* node = new ros::NodeHandle();
 
-  trajectory::TrajectoryFollower interface(node);
+  TrajectoryFollower interface(node);
 
   ros::Rate rate(10);
   while (ros::ok())

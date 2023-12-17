@@ -9,9 +9,6 @@ using geometry_msgs::Twist;
 using robmob_msgs::CommandStatus;
 using nav_msgs::Odometry;
 
-namespace trajectory
-{
-
 class TrajectoryFollower {
 
 public:
@@ -39,5 +36,3 @@ private:
   void onManualCommand(Twist &msg);
   void onOdom(Odometry &msg);
 };
-
-}
