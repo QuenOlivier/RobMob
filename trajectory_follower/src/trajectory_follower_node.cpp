@@ -40,7 +40,7 @@ void TrajectoryFollower::onOdom(Odometry &msg){
 void TrajectoryFollower::update(){
   if( current_state_.command_status == CommandStatus::MANUAL)
   {
-    if ( (last_manual_msg_stamp_ - ros::Time::now() ).toSec > 0.2 )
+    if ( (last_manual_msg_stamp_ - ros::Time::now() ).toSec() > 0.2 )
     {
       last_manual_cmd_.linear.x = 0.0;
       last_manual_cmd_.angular.z = 0.0;
