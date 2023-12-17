@@ -11,7 +11,7 @@
   <node name="trajectory_follower" pkg="trajectory_follower" type="trajectory_follower_node" output="screen"/>
   <node
     pkg="rviz"
-    exec="rviz"
+    type="rviz"
     name="rviz"
     output="screen"
     args="-d $(find robmob_launcher)/config/top_down_map.rviz"
