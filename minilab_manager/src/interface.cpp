@@ -3,11 +3,6 @@
 #include <iostream>
 #include <string>
 
-
-namespace minilab_manager
-{
-
-
 MinilabManagerInterface::MinilabManagerInterface(ros::NodeHandle *nh) :
 nh_(*nh),
 map_received_(false),
@@ -45,6 +40,7 @@ bool MinilabManagerInterface::onAutoRequest(Trigger::Request &req, Trigger::Resp
 
 bool MinilabManagerInterface::onManualRequest(Empty::Request &req, Empty::Response &res){
   updateState(CommandStatus::MANUAL);
+  return true;
 }
 
 bool MinilabManagerInterface::isMapOk(){
@@ -63,14 +59,12 @@ void MinilabManagerInterface::update(){
   pub_command_state_.publish(current_state_);
 }
 
-}
-
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "minilab_manager");
   ros::NodeHandle* node = new ros::NodeHandle();
 
-  minilab_manager::MinilabManagerInterface interface(node);
+  MinilabManagerInterface interface(node);
 
   ros::Rate rate(10);
   while (ros::ok())

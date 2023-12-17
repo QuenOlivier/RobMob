@@ -10,9 +10,6 @@ using std_srvs::Empty;
 using std_srvs::Trigger;
 using robmob_msgs::CommandStatus;
 
-namespace minilab_manager
-{
-
 class MinilabManagerInterface {
 
 public:
@@ -41,5 +38,3 @@ private:
   bool isTrajectoryOk();
   void updateState(uint state);
 };
-
-}
