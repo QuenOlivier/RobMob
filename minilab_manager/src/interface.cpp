@@ -3,8 +3,6 @@
 #include <iostream>
 #include <string>
 
-using std_srvs::Empty;
-using std_srvs::Trigger;
 
 namespace minilab_manager
 {
@@ -13,8 +11,7 @@ namespace minilab_manager
 MinilabManagerInterface::MinilabManagerInterface(ros::NodeHandle *nh) :
 nh_(*nh),
 map_received_(false),
-last_trajectory_msg_(ros::Time::now()),
-current_state_(State::MANUAL)
+last_trajectory_msg_(ros::Time::now())
 {
   // sub_map_;
   // sub_trajectory_;
@@ -22,15 +19,18 @@ current_state_(State::MANUAL)
   manual_request_server_ = nh_.advertiseService("/system/manual_mode_request", &MinilabManagerInterface::onManualRequest, this);
 
   pub_command_state_ = nh_.advertise<robmob_msgs::CommandStatus>("/system/state", 1);
+
+  current_state_.command_status = CommandStatus::MANUAL;
+  last_trajectory_msg_ = ros::Time::now();
 }
 
 bool MinilabManagerInterface::onAutoRequest(Trigger::Request &req, Trigger::Response &res){
   bool map_ok = isMapOk();
   bool traj_ok = isTrajectoryOk();
-  if( current_state_ != State::AUTO && map_ok && traj_ok){
-    updateState(State::AUTO);
+  if( current_state_.command_status != CommandStatus::AUTO && map_ok && traj_ok){
+    updateState(CommandStatus::AUTO);
     res.success = true;
-  } else if (current_state_ == State::AUTO) {
+  } else if (current_state_.command_status == CommandStatus::AUTO) {
     res.success = false;
     res.message = "The State is already in AUTO mode";
   } else {
@@ -44,7 +44,7 @@ bool MinilabManagerInterface::onAutoRequest(Trigger::Request &req, Trigger::Resp
 }
 
 bool MinilabManagerInterface::onManualRequest(Empty::Request &req, Empty::Response &res){
-  updateState(State::MANUAL);
+  updateState(CommandStatus::MANUAL);
 }
 
 bool MinilabManagerInterface::isMapOk(){
@@ -55,14 +55,12 @@ bool MinilabManagerInterface::isTrajectoryOk(){
   return (last_trajectory_msg_ - ros::Time::now).toSec() < 0.2;
 }
 
-void MinilabManagerInterface::updateState(State state){
+void MinilabManagerInterface::updateState(uint8 state){
   current_state_ = state;
 }
 
 void MinilabManagerInterface::update(){
-  robmob_msgs::CommandStatus msg;
-  msg.command_status = current_state_;
-  pub_command_state_.publish(msg);
+  pub_command_state_.publish(current_state_);
 }
 
 }

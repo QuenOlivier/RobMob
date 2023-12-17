@@ -8,11 +8,10 @@
 
 using std_srvs::Empty;
 using std_srvs::Trigger;
+using robmob_msgs::CommandStatus;
 
 namespace minilab_manager
 {
-
-enum State { MANUAL, AUTO };
 
 class MinilabManagerInterface {
 
@@ -34,13 +33,13 @@ private:
 
   ros::Time last_trajectory_msg_;
   bool map_received_;
-  State current_state_;
+  CommandStatus current_state_;
 
   bool onAutoRequest(Trigger::Request &req, Trigger::Response &res);
   bool onManualRequest(Empty::Request &req, Empty::Response &res);
   bool isMapOk();
   bool isTrajectoryOk();
-  void updateState(State state);
+  void updateState(uint8 state);
 };
 
 }
