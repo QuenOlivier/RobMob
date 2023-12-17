@@ -32,7 +32,7 @@ private:
   CommandStatus current_state_;
   Odometry last_robot_odometry_;
 
-  void onCommandStatus(CommandStatus &msg);
-  void onManualCommand(Twist &msg);
-  void onOdom(Odometry &msg);
+  void onCommandStatus(const CommandStatus &msg);
+  void onManualCommand(const Twist &msg);
+  void onOdom(const Odometry &msg);
 };

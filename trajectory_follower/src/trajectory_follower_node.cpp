@@ -20,16 +20,16 @@ nh_(*nh)
   current_state_.command_status = CommandStatus::MANUAL;
 }
 
-void TrajectoryFollower::onManualCommand(Twist &msg){
+void TrajectoryFollower::onManualCommand(const Twist &msg){
   last_manual_cmd_ = msg;
   last_manual_msg_stamp_ = ros::Time::now();
 }
 
-void TrajectoryFollower::onCommandStatus(CommandStatus &msg){
+void TrajectoryFollower::onCommandStatus(const CommandStatus &msg){
   current_state_ = msg;
 }
 
-void TrajectoryFollower::onOdom(Odometry &msg){
+void TrajectoryFollower::onOdom(const Odometry &msg){
   last_robot_odometry_ = msg;
 }
 
