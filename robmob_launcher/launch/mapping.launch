@@ -1,12 +1,13 @@
 <launch>
 
-  <include file="$(find minilab_simulation)/launch/minilab_simulation.launch" >
+  <include file="$(find minilab_simulation)/launch/minilab_simulation.launch" />
   <node respawn="true" pkg="joy"
         type="joy_node" name="joystick_driver" >
     <param name="deadzone" value="0.12" />
   </node>
-  <node name="teleop_helper" pkg="teleoperation" type="teleop_minilab.py" output="screen">
-  <node name="slam" pkg="gmapping" type="slam_gmapping" output="screen">
-  <node name="manager_interface" pkg="minilab_manager" type="minilab_manager_node" output="screen">
+  <node name="teleop_helper" pkg="teleoperation" type="teleop_minilab.py" output="screen"/>
+  <node name="slam" pkg="gmapping" type="slam_gmapping" output="screen"/>
+  <node name="manager_interface" pkg="minilab_manager" type="minilab_manager_node" output="screen"/>
+  <node name="trajectory_follower" pkg="trajectory_follower" type="trajectory_follower_node" output="screen"/>
 
 </launch>
