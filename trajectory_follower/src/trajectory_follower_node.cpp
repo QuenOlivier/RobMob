@@ -45,8 +45,6 @@ void TrajectoryFollower::update(){
   }
 }
 
-}
-
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "trajectory_follower");
