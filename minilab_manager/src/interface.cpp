@@ -52,10 +52,10 @@ bool MinilabManagerInterface::isMapOk(){
 }
 
 bool MinilabManagerInterface::isTrajectoryOk(){
-  return (last_trajectory_msg_ - ros::Time::now).toSec() < 0.2;
+  return (last_trajectory_msg_ - ros::Time::now() ).toSec() < 0.2;
 }
 
-void MinilabManagerInterface::updateState(uint8 state){
+void MinilabManagerInterface::updateState(uint state){
   current_state_ = state;
 }
 
@@ -77,7 +77,7 @@ int main(int argc, char **argv)
   {
     interface.update();
     ros::spinOnce();
-    loop_rate.sleep();
+    rate.sleep();
   }
   return 0;
 }

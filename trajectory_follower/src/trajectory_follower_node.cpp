@@ -65,7 +65,7 @@ int main(int argc, char **argv)
   {
     interface.update();
     ros::spinOnce();
-    loop_rate.sleep();
+    rate.sleep();
   }
   return 0;
 }

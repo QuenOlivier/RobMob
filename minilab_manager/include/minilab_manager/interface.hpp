@@ -39,7 +39,7 @@ private:
   bool onManualRequest(Empty::Request &req, Empty::Response &res);
   bool isMapOk();
   bool isTrajectoryOk();
-  void updateState(uint8 state);
+  void updateState(uint state);
 };
 
 }
