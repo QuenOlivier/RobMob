@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 import roslib
@@ -43,9 +43,9 @@ def main():
 		rosrun sawyer_robot_code <your_script_name>
 	"""
 
-	print "Initializing ROS node...\n\n"
+	print("Initializing ROS node...\n\n")
 	rospy.init_node("Main",anonymous=True)
-	print "Doing stuff...\n"
+	print("Doing stuff...\n")
 
 	test=TurtleTeleop()
 
