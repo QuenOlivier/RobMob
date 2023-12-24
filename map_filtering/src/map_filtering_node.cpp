@@ -2,32 +2,49 @@
 
 #include <iostream>
 #include <string>
-
+#include <vector>
 
 MapFilteringNode::MapFilteringNode(ros::NodeHandle *nh) :
-nh_(*nh)
+nh_(*nh),
+map_(nullptr)
 {
-  sub_map_ = nh_.subscribe("/map/raw_map", 1, &MapFilteringNode::onOccupancyGrid, this);
-
   pub_map_ = nh_.advertise<nav_msgs::OccupancyGrid>("/map/filtered_map", 1);
 
-  client = nh_.serviceClient<nav_msgs::GetMap>("/dynamic_map");
-}
+  // get parameters
+  std::string image_path;
+  nh_.getParam("image_path", image_path);
+  int filter_size;
+  nh_.getParam("filter_size", filter_size);
+  std::vector<float> origin_pose;
+  nh_.getParam("origin", origin_pose);
 
-void MapFilteringNode::onOccupancyGrid(const nav_msgs::OccupancyGrid::SharedPtr &msg){
-  last_map_ = msg;
+  raw_image_filter_ = CvMapFilter(filter_size);
+  raw_image_filter_.setPath(image_path);
+
+  cv::Size image_size = raw_image_filter_.getSize();
+
+  nav_msgs::MapMetaData metadata;
+
+  nh_.getParam("resolution", metadata.resolution);
+  metadata.width = image_size.width;
+  metadata.height = image_size.height;
+  metadata.origin.x = origin_pose.at(0);
+  metadata.origin.y = origin_pose.at(1);
+  metadata.origin.z = origin_pose.at(2);
+  metadata.load_time = ros::Time::now();
+  map_helper_.setMapMetadata(metadata);
+
 }
 
 void MapFilteringNode::update(){
-  if( current_state_.command_status == CommandStatus::MANUAL)
+  if(!map_)
   {
-    if ( (last_manual_msg_stamp_ - ros::Time::now() ).toSec() > 0.2 )
-    {
-      last_manual_cmd_.linear.x = 0.0;
-      last_manual_cmd_.angular.z = 0.0;
-    }
-    pub_cmd_.publish(last_manual_cmd_);
+    cv::Mat filtered_map_cv = raw_image_filter_.filter();
+    *map_ = map_helper_.toOccupancyGrid(filtered_map_cv);
+    map_->header.frame_id = "/world";
   }
+  map_->header.stamp = ros::Time::now();
+  pub_map_.publish(*map_);
 }
 
 int main(int argc, char **argv)

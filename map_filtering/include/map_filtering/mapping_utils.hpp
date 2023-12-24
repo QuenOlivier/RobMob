@@ -12,6 +12,7 @@ public:
   ~MapHelper(){};
 
   void setMapMetadata(const nav_msgs::MapMetaData data){ map_metadata_ = data; };
+  nav_msgs::MapMetaData getMapMetadata() const { return map_metadata_; };
 
   cv::Mat toCvMat(const nav_msgs::OccupancyGrid map);
   cv::Point toCvCoordinates(const geometry_msgs::Pose pose);

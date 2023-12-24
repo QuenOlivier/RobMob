@@ -1,0 +1,40 @@
+
+<launch>
+
+  <arg name="map_name" default="buvette"/>
+	<param name="use_sim_time" value="true" />
+
+  <rosparam command="load" file="$(find robmob_launcher)/map/$(arg map_name).yaml" />
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+	<include file="$(find minilab_simulation)/launch/empty_world.launch">
+		<arg name="world_name" value="worlds/empty.world"/> <!-- Note: the world_name is with respect to GAZEBO_RESOURCE_PATH environmental variable  empty.world -->
+		<arg name="paused" value="false"/>
+		<arg name="use_sim_time" value="true"/>
+		<arg name="gui" value="false"/>
+		<arg name="headless" value="false"/>
+		<arg name="debug" value="false"/>
+	</include>
+
+  <node name="spawn_robot1" pkg="gazebo_ros" type="spawn_model" args="-file $(find minilab_model)/urdf/minilab_equiped.urdf -urdf  -x 0.0 -y 0 -z 0.05 -Y 1.57 -model minilab_equiped" />
+
+	<include file="$(find minilab_simulation)/launch/$(arg map_name).launch" />
+  <include file="$(find minilab_simulation)/launch/minilab_state_publisher.launch" />
+
+  <node respawn="true" pkg="joy"
+        type="joy_node" name="joystick_driver" >
+    <param name="deadzone" value="0.12" />
+  </node>
+  <node name="teleop_helper" pkg="teleoperation" type="teleop_minilab.py" output="screen"/>
+
+  <node name="manager_interface" pkg="minilab_manager" type="minilab_manager_node" output="screen"/>
+  <node name="trajectory_follower" pkg="trajectory_follower" type="trajectory_follower_node" output="screen"/>
+  <node
+    pkg="rviz"
+    type="rviz"
+    name="rviz"
+    output="screen"
+    args="-d $(find robmob_launcher)/config/top_down_map.rviz"
+  />
+
+</launch>
