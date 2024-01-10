@@ -1,13 +1,4 @@
 #include "map_filtering/mapping_utils.hpp"
-#include <nav_msgs/OccupancyGrid.h>
-#include <nav_msgs/GetMap.h>
-#include <nav_msgs/MapMetaData.h>
-#include <geometry_msgs/Point.h>
-#include <geometry_msgs/Pose.h>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <opencv2/imgproc/imgproc_c.h>
-#include <opencv2/opencv.hpp>
 
 cv::Mat MapHelper::toCvMat(const nav_msgs::OccupancyGrid map)
 {

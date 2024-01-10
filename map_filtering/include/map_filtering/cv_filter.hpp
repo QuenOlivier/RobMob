@@ -21,6 +21,6 @@ public:
 private:
   cv::Mat raw_image_;
   std::string image_path_;
-  int size_,
+  int size_;
 
 };

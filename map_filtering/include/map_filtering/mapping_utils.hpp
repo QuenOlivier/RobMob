@@ -5,6 +5,12 @@
 #include <opencv2/imgproc/imgproc_c.h>
 #include <opencv2/opencv.hpp>
 
+#include <nav_msgs/OccupancyGrid.h>
+#include <nav_msgs/GetMap.h>
+#include <nav_msgs/MapMetaData.h>
+#include <geometry_msgs/Point.h>
+#include <geometry_msgs/Pose.h>
+
 class MapHelper
 {
 public:
