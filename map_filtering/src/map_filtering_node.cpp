@@ -12,11 +12,11 @@ map_(nullptr)
 
   // get parameters
   std::string image_path;
-  nh_.getParam("image_folder_path", image_path);
+  nh_.getParam("/map_filtering_node/image_folder_path", image_path);
   std::string image_name;
   nh_.getParam("image", image_name);
   int filter_size;
-  nh_.getParam("filter_size", filter_size);
+  nh_.getParam("/map_filtering_node/filter_size", filter_size);
   std::vector<float> origin_pose;
   nh_.getParam("origin", origin_pose);
 
