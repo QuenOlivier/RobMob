@@ -21,6 +21,14 @@ public:
   void setFilterSize(int size){ size_ = size; };
 
 private:
+  void removeEmptyCells();
+  bool findDataRow(int row);
+  bool findDataCol(int col);
+  int findMaxRowPixel(int low_interval, int high_interval);
+  int findMaxColPixel(int low_interval, int high_interval);
+  int findMinRowPixel(int low_interval, int high_interval);
+  int findMinColPixel(int low_interval, int high_interval);
+
   cv::Mat raw_image_;
   std::string image_path_;
   int size_;
