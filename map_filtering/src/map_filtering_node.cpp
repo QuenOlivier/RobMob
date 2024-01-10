@@ -12,14 +12,16 @@ map_(nullptr)
 
   // get parameters
   std::string image_path;
-  nh_.getParam("image_path", image_path);
+  nh_.getParam("image_folder_path", image_path);
+  std::string image_name;
+  nh_.getParam("image", image_name);
   int filter_size;
   nh_.getParam("filter_size", filter_size);
   std::vector<float> origin_pose;
   nh_.getParam("origin", origin_pose);
 
   raw_image_filter_ = CvMapFilter(filter_size);
-  raw_image_filter_.setPath(image_path);
+  raw_image_filter_.setPath(image_path+image_name);
 
   cv::Size image_size = raw_image_filter_.getImageSize();
 
