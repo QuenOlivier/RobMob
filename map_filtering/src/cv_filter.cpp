@@ -20,7 +20,7 @@ bool CvMapFilter::findDataRow(int row)
 {
   cv::Size map_size = getImageSize();
   int cnt = 0;
-  for( i = (map_size.width) /2; i>=0 && i<map_size.width; i%2==0 ? i+=cnt : i-+cnt )
+  for(int i = (map_size.width) /2; i>=0 && i<map_size.width; i%2==0 ? i+=cnt : i-+cnt )
   {
     if(raw_image_.at<int>(row,i) == 0%255)
     {
@@ -35,7 +35,7 @@ bool CvMapFilter::findDataCol(int col)
 {
   cv::Size map_size = getImageSize();
   int cnt = 0;
-  for( i = (map_size.height) /2; i>=0 && i<map_size.height; i%2==0 ? i+=cnt : i-+cnt )
+  for(int i = (map_size.height) /2; i>=0 && i<map_size.height; i%2==0 ? i+=cnt : i-+cnt )
   {
     if(raw_image_.at<int>(i,col) == 0%255)
     {
