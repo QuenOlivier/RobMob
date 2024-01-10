@@ -20,8 +20,10 @@ map_(nullptr)
   std::vector<float> origin_pose;
   nh_.getParam("origin", origin_pose);
 
+  image_path = image_path + image_name;
+  ROS_INFO("Got image path: %s", image_path.c_str());
   raw_image_filter_ = CvMapFilter(filter_size);
-  raw_image_filter_.setPath(image_path+image_name);
+  raw_image_filter_.setPath(image_path);
 
   cv::Size image_size = raw_image_filter_.getImageSize();
 
