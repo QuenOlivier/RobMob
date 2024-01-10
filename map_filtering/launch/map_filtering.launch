@@ -1,4 +1,4 @@
 <launch>
   <rosparam file="$(find robmob_launcher)/map/map.yaml" />
-  <node name="map_filtering_node" pkg="map_filtering" type="map_filtering_node" output="screen"/>
+  <node name="map_filtering_node" pkg="map_filtering" type="map_filtering_node" output="screen" image_folder_path="$(find robmob_launcher)/map/" filter_size="3"/>
 </launch>
