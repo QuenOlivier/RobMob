@@ -22,7 +22,7 @@ bool CvMapFilter::findDataRow(int row)
   std::cout << "Entering findDataRow\n";
   cv::Size map_size = getImageSize();
   int cnt = 0;
-  for(int i = (map_size.width) /2; i>=0 && i<map_size.width; i%2==0 ? i+=cnt : i-=cnt )
+  for(int i = (map_size.width) /2; i>=0 && i<map_size.width; cnt%2==0 ? i+=cnt : i-=cnt )
   {
     std::cout << "i is "<< i <<"\n";
     if(raw_image_.at<int>(row,i) == 0%255)
@@ -39,7 +39,7 @@ bool CvMapFilter::findDataCol(int col)
   std::cout << "Entering findDataCol\n";
   cv::Size map_size = getImageSize();
   int cnt = 0;
-  for(int i = (map_size.height) /2; i>=0 && i<map_size.height; i%2==0 ? i+=cnt : i-=cnt )
+  for(int i = (map_size.height) /2; i>=0 && i<map_size.height; cnt%2==0 ? i+=cnt : i-=cnt )
   {
     std::cout << "i is "<< i <<"\n";
     if(raw_image_.at<int>(i,col) == 0%255)
