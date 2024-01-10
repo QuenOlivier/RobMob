@@ -21,7 +21,7 @@ map_(nullptr)
   raw_image_filter_ = CvMapFilter(filter_size);
   raw_image_filter_.setPath(image_path);
 
-  cv::Size image_size = raw_image_filter_.getSize();
+  cv::Size image_size = raw_image_filter_.getImageSize();
 
   nav_msgs::MapMetaData metadata;
 
