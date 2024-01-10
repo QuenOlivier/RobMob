@@ -11,12 +11,14 @@
 class CvMapFilter {
 
 public:
+  CvMapFilter();
   CvMapFilter(int size);
   ~CvMapFilter(){};
 
   cv::Mat filter();
   void setPath(std::string path);
-  cv::Size getSize() { return raw_image_.size(); };
+  cv::Size getImageSize() { return raw_image_.size(); };
+  void setFilterSize(int size){ size_ = size};
 
 private:
   cv::Mat raw_image_;

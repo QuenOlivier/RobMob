@@ -1,9 +1,13 @@
 #include "map_filtering/cv_filter.hpp"
 
+CvMapFilter::CvMapFilter() :
+size_(1)
+{
+};
+
 CvMapFilter::CvMapFilter(int size) :
 size_(size)
 {
-
 };
 
 void CvMapFilter::setPath(std::string path)
