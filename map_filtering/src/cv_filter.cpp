@@ -12,7 +12,7 @@ size_(size)
 
 void CvMapFilter::setPath(std::string path)
 {
-  raw_image_ = cv::imread(image_path_, -1);
+  raw_image_ = cv::imread(image_path_.c_str(), cv::IMREAD_COLOR);
 
   if (raw_image_.empty())
   {
