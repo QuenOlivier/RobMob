@@ -18,10 +18,13 @@ size_(size)
 
 bool CvMapFilter::findDataRow(int row)
 {
+
+  std::cout << "Entering findDataRow\n";
   cv::Size map_size = getImageSize();
   int cnt = 0;
   for(int i = (map_size.width) /2; i>=0 && i<map_size.width; i%2==0 ? i+=cnt : i-=cnt )
   {
+    std::cout << "i is "<< i <<"\n";
     if(raw_image_.at<int>(row,i) == 0%255)
     {
       return true;
@@ -33,10 +36,12 @@ bool CvMapFilter::findDataRow(int row)
 
 bool CvMapFilter::findDataCol(int col)
 {
+  std::cout << "Entering findDataCol\n";
   cv::Size map_size = getImageSize();
   int cnt = 0;
   for(int i = (map_size.height) /2; i>=0 && i<map_size.height; i%2==0 ? i+=cnt : i-=cnt )
   {
+    std::cout << "i is "<< i <<"\n";
     if(raw_image_.at<int>(i,col) == 0%255)
     {
       return true;
@@ -48,6 +53,7 @@ bool CvMapFilter::findDataCol(int col)
 
 int CvMapFilter::findMaxRowPixel(int low_interval, int high_interval)
 {
+
   if(high_interval == low_interval)
   {
     return findDataRow(low_interval) ? low_interval : -1;
@@ -110,10 +116,10 @@ void CvMapFilter::removeEmptyCells()
 {
   cv::Size map_size = getImageSize();
 
-  int maxRow = findMaxRowPixel(0, map_size.height);
-  int minRow = findMinRowPixel(0, map_size.height);
-  int maxCol = findMaxColPixel(0, map_size.width);
-  int minCol = findMinColPixel(0, map_size.width);
+  int maxRow = findMaxRowPixel(0, map_size.height-1);
+  int minRow = findMinRowPixel(0, map_size.height-1);
+  int maxCol = findMaxColPixel(0, map_size.width-1);
+  int minCol = findMinColPixel(0, map_size.width-1);
   std::cout << "Dimensions: "<< minRow<<", "<< maxRow<< ", "<< minCol<< ", "<< maxCol<<'\n';
 
   raw_image_ = raw_image_( cv::Range(minRow, maxRow+1), cv::Range(minCol, maxCol+1));
