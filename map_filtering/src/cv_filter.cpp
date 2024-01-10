@@ -23,8 +23,8 @@ cv::Mat CvMapFilter::filter()
 
   cv::Mat element = cv::getStructuringElement( 2, cv::Size( 2*size_ + 1, 2*size_+1 ), cv::Point( size_, size_ ) );
 
-  cv::MorphologyEx(raw_image_, result, OPENING, element);
-  cv::MorphologyEx(result, result, CLOSING, element);
+  cv::morphologyEx(raw_image_, result, OPENING, element);
+  cv::morphologyEx(result, result, CLOSING, element);
 
   return result;
 

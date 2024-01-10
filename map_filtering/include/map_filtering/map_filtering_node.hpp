@@ -6,6 +6,8 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <nav_msgs/GetMap.h>
 
+#include <memory>
+
 
 class MapFilteringNode {
 
@@ -13,9 +15,9 @@ public:
   MapFilteringNode(ros::NodeHandle *nh);
   ~MapFilteringNode(){};
 
+  void update();
 
 private:
-  void update();
 
   ros::NodeHandle nh_;
   ros::Publisher pub_map_;
@@ -23,5 +25,5 @@ private:
   CvMapFilter raw_image_filter_;
   MapHelper map_helper_;
 
-  nav_msgs::OccupancyGrid::SharedPtr map_;
+  std::shared_ptr<nav_msgs::OccupancyGrid> map_;
 };

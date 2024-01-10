@@ -27,4 +27,4 @@ public:
 
 private:
   nav_msgs::MapMetaData map_metadata_;
-}
+};

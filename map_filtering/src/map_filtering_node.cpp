@@ -28,10 +28,10 @@ map_(nullptr)
   nh_.getParam("resolution", metadata.resolution);
   metadata.width = image_size.width;
   metadata.height = image_size.height;
-  metadata.origin.x = origin_pose.at(0);
-  metadata.origin.y = origin_pose.at(1);
-  metadata.origin.z = origin_pose.at(2);
-  metadata.load_time = ros::Time::now();
+  metadata.origin.position.x = origin_pose.at(0);
+  metadata.origin.position.y = origin_pose.at(1);
+  metadata.origin.position.z = origin_pose.at(2);
+  metadata.map_load_time = ros::Time::now();
   map_helper_.setMapMetadata(metadata);
 
 }
