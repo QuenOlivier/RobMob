@@ -97,13 +97,13 @@ int CvMapFilter::findMinRowPixel(int low_interval, int high_interval)
 {
   if(high_interval == low_interval)
   {
-    return findDataRow(low_interval) ? low_interval : std::numeric_limits<int>();
+    return findDataRow(low_interval) ? low_interval : std::numeric_limits<int>::max();
   }
   if(high_interval == low_interval + 1)
   {
     return std::max(
-      findDataRow(low_interval) ? low_interval : std::numeric_limits<int>(),
-      findDataRow(high_interval) ? high_interval : std::numeric_limits<int>()
+      findDataRow(low_interval) ? low_interval : std::numeric_limits<int>::max(),
+      findDataRow(high_interval) ? high_interval : std::numeric_limits<int>::max()
     );
   }
   int test_row = (high_interval - low_interval)/2, max_row = 0;
@@ -124,8 +124,8 @@ int CvMapFilter::findMinColPixel(int low_interval, int high_interval)
   if(high_interval == low_interval + 1)
   {
     return std::max(
-      findDataCol(low_interval) ? low_interval : std::numeric_limits<int>(),
-      findDataCol(high_interval) ? high_interval : std::numeric_limits<int>()
+      findDataCol(low_interval) ? low_interval : std::numeric_limits<int>::max(),
+      findDataCol(high_interval) ? high_interval : std::numeric_limits<int>::max()
     );
   }
   int test_row = (high_interval - low_interval)/2, max_row = 0;
