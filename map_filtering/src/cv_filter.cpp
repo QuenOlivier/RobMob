@@ -1,5 +1,6 @@
 #include "map_filtering/cv_filter.hpp"
 #include <sys/stat.h>
+#include <limits>
 
 inline bool fileExist (const std::string& name) {
   struct stat buffer;
@@ -54,6 +55,13 @@ int CvMapFilter::findMaxRowPixel(int low_interval, int high_interval)
   {
     return findDataRow(low_interval) ? low_interval : -1;
   }
+  if(high_interval == low_interval + 1)
+  {
+    return std::max(
+      findDataRow(low_interval) ? low_interval : -1,
+      findDataRow(high_interval) ? high_interval : -1
+    );
+  }
   int test_row = (high_interval - low_interval)/2, max_row = 0;
   if(findDataRow(test_row))
   {
@@ -65,6 +73,13 @@ int CvMapFilter::findMaxRowPixel(int low_interval, int high_interval)
 
 int CvMapFilter::findMaxColPixel(int low_interval, int high_interval)
 {
+  if(high_interval == low_interval + 1)
+  {
+    return std::max(
+      findDataCol(low_interval) ? low_interval : -1,
+      findDataCol(high_interval) ? high_interval : -1
+    );
+  }
   if(high_interval == low_interval)
   {
     return findDataCol(low_interval) ? low_interval : -1;
@@ -82,7 +97,14 @@ int CvMapFilter::findMinRowPixel(int low_interval, int high_interval)
 {
   if(high_interval == low_interval)
   {
-    return findDataRow(low_interval) ? low_interval : -1;
+    return findDataRow(low_interval) ? low_interval : std::numeric_limits<int>();
+  }
+  if(high_interval == low_interval + 1)
+  {
+    return std::max(
+      findDataRow(low_interval) ? low_interval : std::numeric_limits<int>(),
+      findDataRow(high_interval) ? high_interval : std::numeric_limits<int>()
+    );
   }
   int test_row = (high_interval - low_interval)/2, max_row = 0;
   if(!findDataRow(test_row))
@@ -98,6 +120,13 @@ int CvMapFilter::findMinColPixel(int low_interval, int high_interval)
   if(high_interval == low_interval)
   {
     return findDataCol(low_interval) ? low_interval : -1;
+  }
+  if(high_interval == low_interval + 1)
+  {
+    return std::max(
+      findDataCol(low_interval) ? low_interval : std::numeric_limits<int>(),
+      findDataCol(high_interval) ? high_interval : std::numeric_limits<int>()
+    );
   }
   int test_row = (high_interval - low_interval)/2, max_row = 0;
   if(!findDataCol(test_row))
