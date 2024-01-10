@@ -1,4 +1,10 @@
 #include "map_filtering/cv_filter.hpp"
+#include <sys/stat.h>
+
+inline bool fileExist (const std::string& name) {
+  struct stat buffer;
+  return (stat (name.c_str(), &buffer) == 0);
+}
 
 CvMapFilter::CvMapFilter() :
 size_(1)
@@ -12,8 +18,11 @@ size_(size)
 
 void CvMapFilter::setPath(std::string path)
 {
-  raw_image_ = cv::imread("map.pgm", cv::IMREAD_GRAYSCALE);
-
+  if(!fileExist(path))
+  {
+    throw std::invalid_argument("File does not exist");
+  }
+  raw_image_ = cv::imread(path.c_str(), cv::IMREAD_GRAYSCALE);
   if (raw_image_.empty())
   {
      throw std::invalid_argument("Could not open source image");
