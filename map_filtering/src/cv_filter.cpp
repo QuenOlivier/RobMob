@@ -19,16 +19,16 @@ size_(size)
 
 bool CvMapFilter::findDataRow(int row)
 {
-  std::cout << "Current row " << row;
+  std::cout << "Current row " << row <<"\n";
   cv::Size map_size = getImageSize();
   int cnt = 0;
   if(row>3997){
-    std::cout << "Current row " << row;
+    std::cout << "Current row " << row <<"\n";
   }
   for(int i = (map_size.width) /2; i>=0 && i<map_size.width; cnt%2==0 ? i+=cnt : i-=cnt )
   {
     if(row>3997){
-      std::cout << "Current idx " << i;
+      std::cout << "Current idx " << i <<"\n";
     }
     if(raw_image_.at<int>(row,i) == 0%255)
     {
@@ -42,17 +42,17 @@ bool CvMapFilter::findDataRow(int row)
 bool CvMapFilter::findDataCol(int col)
 {
   // if(col>3997){
-    std::cout << "Current col " << col;
+    std::cout << "Current col " << col <<"\n";
   // }
   cv::Size map_size = getImageSize();
   int cnt = 0;
   if(col>3997){
-    std::cout << "Current col " << col;
+    std::cout << "Current col " << col <<"\n";
   }
   for(int i = (map_size.height) /2; i>=0 && i<map_size.height; cnt%2==0 ? i+=cnt : i-=cnt )
   {
     if(col>3997){
-      std::cout << "Current idx " << i;
+      std::cout << "Current idx " << i <<"\n";
     }
     if(raw_image_.at<int>(i,col) == 0%255)
     {
