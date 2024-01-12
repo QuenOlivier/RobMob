@@ -34,6 +34,9 @@ bool CvMapFilter::findDataRow(int row)
 
 bool CvMapFilter::findDataCol(int col)
 {
+  // if(col>3997){
+    std::cout << "Current col " << col;
+  // }
   cv::Size map_size = getImageSize();
   int cnt = 0;
   if(col>3997){
