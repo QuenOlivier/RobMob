@@ -22,9 +22,7 @@ bool CvMapFilter::findDataRow(int row)
   std::cout << "Current row " << row <<"\n";
   cv::Size map_size = getImageSize();
   int cnt = 0;
-  if(row>3997){
-    std::cout << "Current row " << row <<"\n";
-  }
+  std::cout << "Current row " << row << ", size " << map_size.width << ", "<< map_size.height<<"\n";
   for(int i = (map_size.width) /2; i>=0 && i<map_size.width; cnt%2==0 ? i+=cnt : i-=cnt )
   {
     if(row>3997){
