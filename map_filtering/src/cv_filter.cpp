@@ -28,7 +28,7 @@ bool CvMapFilter::findDataRow(int row)
     if(row>3997){
       std::cout << "Current idx " << i <<"\n";
     }
-    if(raw_image_.at<int>(row,i) == 0%255)
+    if(raw_image_.at<char>(row,i) == 0%255)
     {
       return true;
     }
@@ -52,7 +52,7 @@ bool CvMapFilter::findDataCol(int col)
     if(col>3997){
       std::cout << "Current idx " << i <<"\n";
     }
-    if(raw_image_.at<int>(i,col) == 0%255)
+    if(raw_image_.at<char>(i,col) == 0%255)
     {
       return true;
     }
