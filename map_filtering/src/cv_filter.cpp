@@ -19,15 +19,10 @@ size_(size)
 
 bool CvMapFilter::findDataRow(int row)
 {
-  std::cout << "Current row " << row <<"\n";
   cv::Size map_size = getImageSize();
   int cnt = 0;
-  std::cout << "Current row " << row << ", size " << map_size.width << ", "<< map_size.height<<"\n";
   for(int i = (map_size.width) /2; i>=0 && i<map_size.width; cnt%2==0 ? i+=cnt : i-=cnt )
   {
-    if(row>3997){
-      std::cout << "Current idx " << i <<"\n";
-    }
     if(raw_image_.at<char>(row,i) == 0%255)
     {
       return true;
@@ -39,19 +34,10 @@ bool CvMapFilter::findDataRow(int row)
 
 bool CvMapFilter::findDataCol(int col)
 {
-  // if(col>3997){
-    std::cout << "Current col " << col <<"\n";
-  // }
   cv::Size map_size = getImageSize();
   int cnt = 0;
-  if(col>3997){
-    std::cout << "Current col " << col <<"\n";
-  }
   for(int i = (map_size.height) /2; i>=0 && i<map_size.height; cnt%2==0 ? i+=cnt : i-=cnt )
   {
-    if(col>3997){
-      std::cout << "Current idx " << i <<"\n";
-    }
     if(raw_image_.at<char>(i,col) == 0%255)
     {
       return true;
@@ -63,8 +49,6 @@ bool CvMapFilter::findDataCol(int col)
 
 int CvMapFilter::findMaxRowPixel(int low_interval, int high_interval)
 {
-
-  std::cout << "Testing interval " << low_interval << ", " << high_interval <<"\n";
   if(high_interval == low_interval)
   {
     return findDataRow(low_interval) ? low_interval : -1;
@@ -86,7 +70,6 @@ int CvMapFilter::findMaxRowPixel(int low_interval, int high_interval)
 
 int CvMapFilter::findMaxColPixel(int low_interval, int high_interval)
 {
-  std::cout << "Testing interval " << low_interval << ", " << high_interval <<"\n";
   if(high_interval == low_interval + 1)
   {
     return std::max(
@@ -153,13 +136,14 @@ void CvMapFilter::removeEmptyCells()
 
   int maxRow = 0, minRow = 0, maxCol = 0, minCol = 0;
   maxRow = findMaxRowPixel(0, map_size.height-1);
-  std::cout << "Max Row " << maxRow << std::endl;
-  // int minRow = findMinRowPixel(0, map_size.height-1);
-  maxCol = findMaxColPixel(0, map_size.width-1);
-  // int minCol = findMinColPixel(0, map_size.width-1);
+  minRow = findMinRowPixel(0, map_size.height-1);
+  cv::Mat pre_reduced_image = raw_image_( cv::Range(minRow, maxRow), cv::Range(0, map_size.width-1));
+  maxCol = findMaxColPixel(0, pre_reduced_image.size().width-1);
+  minCol = findMinColPixel(0, pre_reduced_image.size().width-1);
   std::cout << "Dimensions: "<< minRow<<", "<< maxRow<< ", "<< minCol<< ", "<< maxCol<<'\n';
 
-  raw_image_ = raw_image_( cv::Range(minRow, maxRow+1), cv::Range(minCol, maxCol+1));
+
+  roi_image_ = pre_reduced_image( cv::Range(0, pre_reduced_image.size().height), cv::Range(minCol, maxCol));
 }
 
 void CvMapFilter::setPath(std::string path)
@@ -174,7 +158,7 @@ void CvMapFilter::setPath(std::string path)
      throw std::invalid_argument("Could not open source image");
   }
   removeEmptyCells();
-  cv::imshow("Test window", raw_image_);
+  cv::imshow("Test window", roi_image_);
   cv::waitKey(0);
 }
 
