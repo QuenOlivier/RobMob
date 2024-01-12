@@ -21,8 +21,14 @@ bool CvMapFilter::findDataRow(int row)
 {
   cv::Size map_size = getImageSize();
   int cnt = 0;
+  if(row>3997){
+    std::cout << "Current col " << row;
+  }
   for(int i = (map_size.width) /2; i>=0 && i<map_size.width; cnt%2==0 ? i+=cnt : i-=cnt )
   {
+    if(row>3997){
+      std::cout << "Current idx " << i;
+    }
     if(raw_image_.at<int>(row,i) == 0%255)
     {
       return true;
