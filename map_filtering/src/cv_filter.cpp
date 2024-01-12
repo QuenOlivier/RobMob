@@ -38,7 +38,7 @@ bool CvMapFilter::findDataCol(int col)
   int cnt = 0;
   for(int i = (map_size.height) /2; i>=0 && i<map_size.height; cnt%2==0 ? i+=cnt : i-=cnt )
   {
-    
+
     if(raw_image_.at<int>(i,col) == 0%255)
     {
       return true;
@@ -137,6 +137,7 @@ void CvMapFilter::removeEmptyCells()
 
   int maxRow = 0, minRow = 0, maxCol = 0, minCol = 0;
   maxRow = findMaxRowPixel(0, map_size.height-1);
+  std::cout << "Max Row " << maxRow << std::endl;
   // int minRow = findMinRowPixel(0, map_size.height-1);
   maxCol = findMaxColPixel(0, map_size.width-1);
   // int minCol = findMinColPixel(0, map_size.width-1);
