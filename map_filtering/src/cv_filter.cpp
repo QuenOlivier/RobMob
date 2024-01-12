@@ -157,6 +157,7 @@ void CvMapFilter::setPath(std::string path)
   {
      throw std::invalid_argument("Could not open source image");
   }
+  raw_image_ = cv::threshold(raw_image_, 100, 255, cv::THRESH_BINARY);
   removeEmptyCells();
   cv::imshow("Test window", roi_image_);
   cv::waitKey(0);
