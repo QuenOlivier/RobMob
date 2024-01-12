@@ -80,13 +80,9 @@ int CvMapFilter::findMaxColPixel(int low_interval, int high_interval)
   {
     return findDataCol(low_interval) ? low_interval : -1;
   }
-  int test_row = (high_interval - low_interval)/2, max_row = 0;
-  if(findDataCol(test_row))
-  {
-    return findMaxColPixel(test_row, high_interval);
-  } else {
-    return findMaxColPixel(low_interval, test_row -1);
-  }
+  int test_col = low_interval + (high_interval - low_interval)/2;
+  int top_half = findMaxColPixel(test_col, high_interval);
+  return top_half != -1 ? top_half : findMaxColPixel(low_interval, test_col-1);
 }
 
 int CvMapFilter::findMinRowPixel(int low_interval, int high_interval)
@@ -140,7 +136,7 @@ void CvMapFilter::removeEmptyCells()
   int maxRow = 0, minRow = 0, maxCol = 0, minCol = 0;
   maxRow = findMaxRowPixel(0, map_size.height-1);
   // int minRow = findMinRowPixel(0, map_size.height-1);
-  // int maxCol = findMaxColPixel(0, map_size.width-1);
+  maxCol = findMaxColPixel(0, map_size.width-1);
   // int minCol = findMinColPixel(0, map_size.width-1);
   std::cout << "Dimensions: "<< minRow<<", "<< maxRow<< ", "<< minCol<< ", "<< maxCol<<'\n';
 
