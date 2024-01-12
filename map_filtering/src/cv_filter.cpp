@@ -19,10 +19,11 @@ size_(size)
 
 bool CvMapFilter::findDataRow(int row)
 {
+  std::cout << "Current row " << row;
   cv::Size map_size = getImageSize();
   int cnt = 0;
   if(row>3997){
-    std::cout << "Current col " << row;
+    std::cout << "Current row " << row;
   }
   for(int i = (map_size.width) /2; i>=0 && i<map_size.width; cnt%2==0 ? i+=cnt : i-=cnt )
   {
@@ -72,10 +73,13 @@ int CvMapFilter::findMaxRowPixel(int low_interval, int high_interval)
   }
   if(high_interval == low_interval + 1)
   {
-    return std::max(
-      findDataRow(low_interval) ? low_interval : -1,
-      findDataRow(high_interval) ? high_interval : -1
-    );
+    bool top_row = findDataRow(high_interval);
+    if(top_row){
+      return high_interval;
+    } else {
+      bool found_data = findDataRow(low_interval);
+      return found_data ? low_interval : -1;
+    }
   }
   int test_row = low_interval + (high_interval - low_interval)/2;
   int top_half = findMaxRowPixel(test_row, high_interval);
