@@ -145,7 +145,8 @@ void CvMapFilter::removeEmptyCells()
 {
   cv::Size map_size = getImageSize();
 
-  int maxRow = findMaxRowPixel(0, map_size.height-1);
+  int maxRow = 0, minRow = 0, maxCol = 0, minCol = 0;
+  maxRow = findMaxRowPixel(0, map_size.height-1);
   // int minRow = findMinRowPixel(0, map_size.height-1);
   // int maxCol = findMaxColPixel(0, map_size.width-1);
   // int minCol = findMinColPixel(0, map_size.width-1);
