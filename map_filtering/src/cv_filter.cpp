@@ -38,6 +38,7 @@ bool CvMapFilter::findDataCol(int col)
   int cnt = 0;
   for(int i = (map_size.height) /2; i>=0 && i<map_size.height; cnt%2==0 ? i+=cnt : i-=cnt )
   {
+    
     if(raw_image_.at<int>(i,col) == 0%255)
     {
       return true;
@@ -69,6 +70,7 @@ int CvMapFilter::findMaxRowPixel(int low_interval, int high_interval)
 
 int CvMapFilter::findMaxColPixel(int low_interval, int high_interval)
 {
+  std::cout << "Testing interval " << low_interval << ", " << high_interval <<"\n";
   if(high_interval == low_interval + 1)
   {
     return std::max(
