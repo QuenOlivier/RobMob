@@ -65,9 +65,13 @@ int CvMapFilter::findMaxRowPixel(int low_interval, int high_interval)
   int test_row = (high_interval - low_interval)/2, max_row = 0;
   if(findDataRow(test_row))
   {
-    return findMaxRowPixel(test_row, high_interval);
+    int middle_idx = test_row + (high_interval - test_row)/2;
+    int top_half = findMaxRowPixel(middle_idx, high_interval);
+    return top_half != -1 ? top_half : findMaxRowPixel(test_row, middle_idx-1);
   } else {
-    return findMaxRowPixel(low_interval, test_row -1);
+    int middle_idx = test_row - (test_row - low_interval)/2;
+    int top_half = findMaxRowPixel(middle_idx, test_row);
+    return top_half != -1 ? top_half : findMaxRowPixel(low_interval, middle_idx-1);
   }
 }
 
@@ -142,9 +146,9 @@ void CvMapFilter::removeEmptyCells()
   cv::Size map_size = getImageSize();
 
   int maxRow = findMaxRowPixel(0, map_size.height-1);
-  int minRow = findMinRowPixel(0, map_size.height-1);
-  int maxCol = findMaxColPixel(0, map_size.width-1);
-  int minCol = findMinColPixel(0, map_size.width-1);
+  // int minRow = findMinRowPixel(0, map_size.height-1);
+  // int maxCol = findMaxColPixel(0, map_size.width-1);
+  // int minCol = findMinColPixel(0, map_size.width-1);
   std::cout << "Dimensions: "<< minRow<<", "<< maxRow<< ", "<< minCol<< ", "<< maxCol<<'\n';
 
   raw_image_ = raw_image_( cv::Range(minRow, maxRow+1), cv::Range(minCol, maxCol+1));
