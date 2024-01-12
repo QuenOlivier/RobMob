@@ -22,12 +22,12 @@ public:
 
 private:
   void removeEmptyCells();
-  bool findDataRow(int row);
-  bool findDataCol(int col);
+  bool findDataRow(int row, cv::Mat image);
+  bool findDataCol(int col, cv::Mat image);
   int findMaxRowPixel(int low_interval, int high_interval, cv::Mat image);
-  int findMaxColPixel(int low_interval, int high_interval);
-  int findMinRowPixel(int low_interval, int high_interval);
-  int findMinColPixel(int low_interval, int high_interval);
+  int findMaxColPixel(int low_interval, int high_interval, cv::Mat image);
+  int findMinRowPixel(int low_interval, int high_interval, cv::Mat image);
+  int findMinColPixel(int low_interval, int high_interval, cv::Mat image);
 
   cv::Mat raw_image_;
   cv::Mat roi_image_;
