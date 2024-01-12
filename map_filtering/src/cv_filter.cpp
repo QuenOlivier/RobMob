@@ -36,9 +36,14 @@ bool CvMapFilter::findDataCol(int col)
 {
   cv::Size map_size = getImageSize();
   int cnt = 0;
+  if(col>3997){
+    std::cout << "Current col " << col;
+  }
   for(int i = (map_size.height) /2; i>=0 && i<map_size.height; cnt%2==0 ? i+=cnt : i-=cnt )
   {
-
+    if(col>3997){
+      std::cout << "Current idx " << i;
+    }
     if(raw_image_.at<int>(i,col) == 0%255)
     {
       return true;
