@@ -62,17 +62,9 @@ int CvMapFilter::findMaxRowPixel(int low_interval, int high_interval)
       findDataRow(high_interval) ? high_interval : -1
     );
   }
-  int test_row = (high_interval - low_interval)/2, max_row = 0;
-  if(findDataRow(test_row))
-  {
-    int middle_idx = test_row + (high_interval - test_row)/2;
-    int top_half = findMaxRowPixel(middle_idx, high_interval);
-    return top_half != -1 ? top_half : findMaxRowPixel(test_row, middle_idx-1);
-  } else {
-    int middle_idx = test_row - (test_row - low_interval)/2;
-    int top_half = findMaxRowPixel(middle_idx, test_row);
-    return top_half != -1 ? top_half : findMaxRowPixel(low_interval, middle_idx-1);
-  }
+  int test_row = low_interval + (high_interval - low_interval)/2;
+  int top_half = findMaxRowPixel(test_row, high_interval);
+  return top_half != -1 ? top_half : findMaxRowPixel(low_interval, test_row-1);
 }
 
 int CvMapFilter::findMaxColPixel(int low_interval, int high_interval)
