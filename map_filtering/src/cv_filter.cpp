@@ -156,21 +156,18 @@ void CvMapFilter::setPath(std::string path)
   {
      throw std::invalid_argument("Could not open source image");
   }
-  cv::threshold(raw_image_, raw_image_, 100, 255, cv::THRESH_BINARY);
   removeEmptyCells();
-  cv::imshow("Test window", roi_image_);
-  cv::waitKey(0);
+  cv::threshold(roi_image_, roi_image_, 250, 255, cv::THRESH_BINARY);
 }
 
 cv::Mat CvMapFilter::filter()
 {
 
   cv::Mat result;
-  cv::cvtColor(raw_image_, result, cv::COLOR_RGB2GRAY);
 
   cv::Mat element = cv::getStructuringElement( 2, cv::Size( 2*size_ + 1, 2*size_+1 ), cv::Point( size_, size_ ) );
 
-  cv::morphologyEx(result, result, OPENING, element);
+  cv::morphologyEx(raw_image_, result, OPENING, element);
   cv::morphologyEx(result, result, CLOSING, element);
 
   return result;
