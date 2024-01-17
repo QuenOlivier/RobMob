@@ -99,19 +99,19 @@ int CvMapFilter::findMinRowPixel(int low_interval, int high_interval, cv::Mat im
       return low_interval;
     } else {
       bool found_data = findDataRow(high_interval, image);
-      return found_data ? high_interval : -1;
+      return found_data ? high_interval : std::numeric_limits<int>::max();
     }
   }
   int test_row = low_interval + (high_interval - low_interval)/2;
   int lower_half = findMinRowPixel(low_interval, test_row-1, image);
-  return lower_half != -1 ? lower_half : findMinRowPixel(test_row, high_interval, image);
+  return lower_half < image.size().height ? lower_half : findMinRowPixel(test_row, high_interval, image);
 }
 
 int CvMapFilter::findMinColPixel(int low_interval, int high_interval, cv::Mat image)
 {
   if(high_interval == low_interval)
   {
-    return findDataCol(low_interval, image) ? low_interval : -1;
+    return findDataCol(low_interval, image) ? low_interval : std::numeric_limits<int>::max();
   }
   if(high_interval == low_interval + 1)
   {
@@ -120,12 +120,12 @@ int CvMapFilter::findMinColPixel(int low_interval, int high_interval, cv::Mat im
       return low_interval;
     } else {
       bool found_data = findDataCol(high_interval, image);
-      return found_data ? high_interval : -1;
+      return found_data ? high_interval : std::numeric_limits<int>::max();
     }
   }
   int test_col = low_interval + (high_interval - low_interval)/2;
   int lower_half = findMinColPixel(low_interval, test_col-1, image);
-  return lower_half != -1 ? lower_half : findMinColPixel(test_col, high_interval, image);
+  return lower_half < image.size().width ? lower_half : findMinColPixel(test_col, high_interval, image);
 }
 
 void CvMapFilter::removeEmptyCells()
