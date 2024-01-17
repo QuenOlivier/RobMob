@@ -36,13 +36,13 @@ void TrajectoryFollower::onOdom(const Odometry &msg){
 void TrajectoryFollower::update(){
   if( current_state_.command_status == CommandStatus::MANUAL)
   {
-    double duration = (last_manual_msg_stamp_ - ros::Time::now() ).toSec();
-    if ( duration > 0.2 )
-    {
-      ROS_WARN_STREAM("Last command too old, "<<duration<<" seconds ago");
-      last_manual_cmd_.linear.x = 0.0;
-      last_manual_cmd_.angular.z = 0.0;
-    }
+    // double duration = (last_manual_msg_stamp_ - ros::Time::now() ).toSec();
+    // if ( duration > 0.2 )
+    // {
+    //   ROS_WARN_STREAM("Last command too old, "<<duration<<" seconds ago");
+    //   last_manual_cmd_.linear.x = 0.0;
+    //   last_manual_cmd_.angular.z = 0.0;
+    // }
     pub_cmd_.publish(last_manual_cmd_);
   }
 }
