@@ -135,6 +135,7 @@ void CvMapFilter::removeEmptyCells()
   int maxRow = 0, minRow = 0, maxCol = 0, minCol = 0;
   maxRow = findMaxRowPixel(0, map_size.height-1, raw_image_);
   minRow = findMinRowPixel(0, map_size.height-1, raw_image_);
+  std::cout << "Dimensions for rows: "<< minRow<<", "<< maxRow<< '\n';
   cv::Mat pre_reduced_image = raw_image_( cv::Range(minRow, maxRow), cv::Range(0, map_size.width-1));
   maxCol = findMaxColPixel(0, pre_reduced_image.size().width-1, pre_reduced_image);
   minCol = findMinColPixel(0, pre_reduced_image.size().width-1, pre_reduced_image);
