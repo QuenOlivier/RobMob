@@ -43,6 +43,8 @@ void MapFilteringNode::update(){
   if(!map_)
   {
     cv::Mat filtered_map_cv = raw_image_filter_.filter();
+    cv::imshow("Test window", filtered_map_cv);
+    cv::waitKey(0);
     *map_ = map_helper_.toOccupancyGrid(filtered_map_cv);
     map_->header.frame_id = "/world";
   }

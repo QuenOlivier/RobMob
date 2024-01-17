@@ -166,8 +166,11 @@ cv::Mat CvMapFilter::filter()
   cv::Mat result;
 
   cv::Mat element = cv::getStructuringElement( 2, cv::Size( 2*size_ + 1, 2*size_+1 ), cv::Point( size_, size_ ) );
+  cv::Mat element_erode = cv::getStructuringElement( 2, cv::Size( 5, 5 ), cv::Point( 2, 2 ) );
 
-  cv::morphologyEx(raw_image_, result, OPENING, element);
+  cv::erode(roi_image_, result, element_erode);
+
+  cv::morphologyEx(result, result, OPENING, element);
   cv::morphologyEx(result, result, CLOSING, element);
 
   return result;
